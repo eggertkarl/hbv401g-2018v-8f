@@ -1,5 +1,8 @@
 
-
+CREATE TABLE AirplaneTypes(
+  AirplaneType VARCHAR,
+  PRIMARY KEY (AirplaneType)
+);
 
 
 CREATE TABLE FlightSeats(
@@ -8,6 +11,7 @@ CREATE TABLE FlightSeats(
   Column VARCHAR(1), -- INT?
   IsFirstClass BIT,
   PRIMARY KEY (AirplaneType, Row, Column)
+  FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
 );
 
 CREATE TABLE Flights(
@@ -22,7 +26,7 @@ CREATE TABLE Flights(
   HasVegeterianMeal BIT,
   HasEntertainment BIT,
   PRIMARY KEY (FlightNumber, DepartureTime),
-  FOREIGN KEY (AirplaneType) REFERENCES FlightSeats(AirplaneType)
+  FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
 );
 
 CREATE TABLE Users(
