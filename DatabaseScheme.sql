@@ -22,12 +22,15 @@ CREATE TABLE Flights(
   ArrivalLocation VARCHAR,
   DepartureTime DATETIME,
   ArrivalTime DATETIME,
+  PriceCoach INT,
+  PriceFirstClass INT,
   HasMeal BIT,
   HasVegeterianMeal BIT,
   HasEntertainment BIT,
   PRIMARY KEY (FlightNumber, DepartureTime),
   FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
 );
+
 
 CREATE TABLE Users(
   Name VARCHAR,

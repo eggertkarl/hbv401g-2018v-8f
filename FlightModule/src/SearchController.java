@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class SearchController {
     // TODO: Implement
 
@@ -21,4 +23,51 @@ public class SearchController {
 
         return new User(name, isMinor, passportNumber);
     });
+
+    private static final Initializer<Flight> flightInitializer = (map -> {
+        String flightNumber = (String) map.get("FlightNumber");
+        String airline = (String) map.get("Airline");
+        int priceCoach = (int) map.get("PriceCoach");
+        int priceFirstClass = (int) map.get("PriceFirstClass");
+
+        // TODO: Add departure time and arrival timea
+
+        int seatCountFirstClassAvailable = 10; //(int) map.get("FirstClassCount");
+        int seatCountCouchAvailable = 6; //(int) map.get("FlightNumber");
+
+        String departureLocation = (String) map.get("DepartureLocation");
+        String arrivalLocation = (String) map.get("ArrivalLocation");
+        boolean hasMeal = (int) map.get("HasMeal") == 1;
+        boolean hasVegeterianMeal = (int) map.get("HasVegeterianMeal") == 1;
+        boolean hasEntertainment = (int) map.get("HasEntertainment") == 1;
+
+        return new Flight(flightNumber, airline, priceCoach, priceFirstClass, seatCountFirstClassAvailable,
+                seatCountCouchAvailable, departureLocation, arrivalLocation, hasMeal, hasVegeterianMeal,
+                hasEntertainment);
+    });
+
+
+
+    private DatabaseController db;
+
+    public SearchController() {
+        this.db = new DatabaseController();
+    }
+
+    public ArrayList<Flight> searchForAllFlights() {
+        return db.executeQuery("SELECT * FROM Flights;", flightInitializer);
+    }
+
+    public ArrayList<Flight> searchForAllFlightsFilterByAirline(String airline) {
+        if(airline == null) {
+            return searchForAllFlights();
+        }
+        if(airline.length() == 0) {
+            return searchForAllFlights();
+        }
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(airline);
+        String query = "SELECT * FROM Flights WHERE Airline LIKE ?;";
+        return db.executeQuery(query, params, flightInitializer);
+    }
 }

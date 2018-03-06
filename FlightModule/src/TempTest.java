@@ -18,6 +18,17 @@ public class TempTest
         createTwoUsers(db);
         selectAllUsers(db);
         deleteAllUsers(db);
+
+
+        // SearchController sort of started.
+        SearchController sc = new SearchController();
+
+        ArrayList<Flight> flights = sc.searchForAllFlightsFilterByAirline("Icelandair");
+
+        System .out.println("Flights found: ");
+        for(int i = 0; i < flights.size(); i++) {
+            System.out.println(flights.get(i).getFlightNumber());
+        }
     }
 
     public static void selectAllSeats(DatabaseController db) {
