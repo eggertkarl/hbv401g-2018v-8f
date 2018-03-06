@@ -10,7 +10,7 @@ public class TempTest
     public static void main(String[] args)
     {
         DatabaseController db = new DatabaseController();
-        List<Seat> x = db.executeQuery("SELECT * FROM FlightSeats;", Seat.class);
+        List<Seat> x = db.executeQuery("SELECT * FROM FlightSeats;", SearchController.seatInitializer);
         for(int i = 0; i < x.size(); i++) {
             System.out.println(x.get(i).getRow());
         }

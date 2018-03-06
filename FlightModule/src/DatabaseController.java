@@ -35,7 +35,7 @@ public class DatabaseController {
     }
 
 
-    private<T> ArrayList<T> convertResultSetToArray(ResultSet rs, Class<T> type){
+    private<T> ArrayList<T> convertResultSetToArray(ResultSet rs, Initializer<T> initializer){
         ArrayList<T> results = new ArrayList<T>();
         try {
             ResultSetMetaData metadata = rs.getMetaData();
@@ -46,24 +46,24 @@ public class DatabaseController {
                 for(int i = 1; i <= numberOfColumns; i++) {
                     row.put(metadata.getColumnName(i), rs.getObject(i));
                 }
-                results.add(type.getConstructor(row.getClass()).newInstance(row));
+                results.add(initializer.create(row));
             }
             return results;
-        } catch (SQLException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
 
-    public<T> ArrayList<T> executeQuery(String query, Class<T> type) {
+    public<T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
         if(!this.connected) {
             this.connect();
         }
         try {
             Statement stmt = this.connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            return this.convertResultSetToArray(rs, type);
+            return this.convertResultSetToArray(rs, initializer);
 
         } catch (SQLException e) {
             e.printStackTrace();

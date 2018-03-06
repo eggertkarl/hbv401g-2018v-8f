@@ -11,15 +11,6 @@ public class Seat{
     //--------------------------------------------------------------------------------
     //endregion
 
-    public Seat(HashMap<String, Object> args) {
-        this.row = (int) args.get("Row");
-        this.column = (String) args.get("Column");
-        this.isAvailable = true;
-        // TODO: Add isAvailable to query
-        //this.isAvailable = (boolean) args.get("isAvailable");
-        this.isFirstClass = (int) args.get("IsFirstClass") == 1;
-    }
-
 
     public Seat(int row, String column, boolean isAvailable, boolean isFirstClass) {
         this.row = row;
