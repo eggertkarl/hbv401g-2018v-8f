@@ -33,6 +33,14 @@ public class DatabaseController {
         this.connected = false;
     }
 
+
+    /**
+     * Converts an instance of ResultSet to an ArrayList<T>.
+     *
+     * @param rs Results from an SQL query.
+     * @param initializer Function that passes values to the constructor of T.
+     * @return A list of types T containing the data from the result set.
+     */
     private <T> ArrayList<T> convertResultSetToArray(ResultSet rs, Initializer<T> initializer) {
         ArrayList<T> results = new ArrayList<>();
         try {
@@ -53,6 +61,16 @@ public class DatabaseController {
         return null;
     }
 
+
+    /**
+     * Executes a SQL query with the supplied parameters.
+     * Returns an ArrayList containing objects of the type that the initializer returns.
+     *
+     * @param query A valid SQL query.
+     * @param params List of arguments to include in the SQL statement.
+     * @param initializer Function that passes values to the constructor of T.
+     * @return Results from the executed query. Returns null if the execution was unsuccessful.
+     */
     public <T> ArrayList<T> executeQuery(String query, ArrayList<Object> params, Initializer<T> initializer) {
         ArrayList<T> results = null;
         PreparedStatement stmt = this.prepareStatement(query, params);
@@ -68,10 +86,26 @@ public class DatabaseController {
         return results;
     }
 
+
+    /**
+     * Executes a SQL query and returns an ArrayList containing objects of the type that the initializer returns.
+     *
+     * @param query A valid SQL query.
+     * @param initializer Function that passes values to the constructor of T.
+     * @return Results from the executed query. Returns null if the execution was unsuccessful.
+     */
     public <T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
         return this.executeQuery(query, null, initializer);
     }
 
+
+    /**
+     * Executes a SQL statement and returns a boolean stating whether the execution was successful.
+     *
+     * @param query A valid SQL statement.
+     * @param params List of arguments to include in the SQL statement.
+     * @return True if the SQL statement is successfully executed.
+     */
     public boolean execute(String query, ArrayList<Object> params) {
         boolean success = true;
         PreparedStatement stmt = this.prepareStatement(query, params);
@@ -90,10 +124,25 @@ public class DatabaseController {
         return success;
     }
 
+
+    /**
+     * Executes a SQL statement and returns a boolean stating whether the execution was successful.
+     *
+     * @param query A valid SQL statement.
+     * @return True if the SQL statement is successfully executed.
+     */
     public boolean execute(String query) {
         return this.execute(query, null);
     }
 
+
+    /**
+     * Creates an instance of PreparedStatement containing the query with the parameters.
+     *
+     * @param query A valid SQL statement.
+     * @param params List of parameters to be passed to the query.
+     * @return An instance of PreparedStatement containing the query with the parameters.
+     */
     private PreparedStatement prepareStatement(String query, ArrayList<Object> params) {
         this.connect();
         if(this.connected) {
@@ -113,6 +162,10 @@ public class DatabaseController {
         return null;
     }
 
+
+    /**
+     * Connects to the database.
+     */
     private void connect() {
         if (!this.connected) {
             int attempt = MAX_CONNECTION_ATTEMPTS;
@@ -139,6 +192,9 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * Closes the connection to the database.
+     */
     private void close() {
         if (this.connection != null) {
             try {
