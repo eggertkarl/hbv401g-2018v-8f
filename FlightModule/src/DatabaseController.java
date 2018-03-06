@@ -35,16 +35,16 @@ public class DatabaseController {
     }
 
 
-    private<T> ArrayList<T> convertResultSetToArray(ResultSet rs, Initializer<T> initializer){
-        ArrayList<T> results = new ArrayList<T>();
+    private <T> ArrayList<T> convertResultSetToArray(ResultSet rs, Initializer<T> initializer) {
+        ArrayList<T> results = new ArrayList<>();
         try {
             ResultSetMetaData metadata = rs.getMetaData();
             int numberOfColumns = metadata.getColumnCount();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 HashMap<String, Object> row = new HashMap<>(numberOfColumns);
-                for(int i = 1; i <= numberOfColumns; i++) {
-                    row.put(metadata.getColumnName(i), rs.getObject(i));
+                for (int i = 0; i < numberOfColumns; i++) {
+                    row.put(metadata.getColumnName(i+1), rs.getObject(i+1));
                 }
                 results.add(initializer.create(row));
             }
@@ -56,45 +56,49 @@ public class DatabaseController {
     }
 
 
-    public<T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
-        if(!this.connected) {
-            this.connect();
-        }
+    public <T> ArrayList<T> executeQuery(String query, ArrayList<Object> params, Initializer<T> initializer) {
+        this.connect();
+        query = query.trim();
+        ArrayList<T> results = null;
         try {
-            Statement stmt = this.connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            return this.convertResultSetToArray(rs, initializer);
+            PreparedStatement stmt = this.connection.prepareStatement(query);
+            for(int i = 0; i < params.size(); i++) {
+                stmt.setObject(i+1, params.get(i));
+            }
+            ResultSet rs = stmt.executeQuery();
+            if (query.substring(0, 6).toLowerCase().equals("select")) {
+                results = this.convertResultSetToArray(rs, initializer);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         this.close();
-        return null;
+        return results;
     }
 
 
     private void connect() {
-        int attempt = MAX_CONNECTION_ATTEMPTS;
-        // Attempts
-        while(attempt > 0) {
-            try {
-                connection = DriverManager.getConnection(this.databaseUrl);
-                this.connected = true;
-                return;
-            }
-            catch(java.sql.SQLException e) {
-                attempt--;
-                if (attempt < 1) {
-                    connection = null;
-                    this.connected = false;
-                    e.printStackTrace();
-                }
-                else {
-                    try {
-                        Thread.sleep(DELAY_BETWEEN_ATTEMPTS);
-                    }
-                    catch (InterruptedException e1) {
-                        e1.printStackTrace();
+        if (!this.connected) {
+            int attempt = MAX_CONNECTION_ATTEMPTS;
+            // Attempts
+            while (attempt > 0) {
+                try {
+                    connection = DriverManager.getConnection(this.databaseUrl);
+                    this.connected = true;
+                    return;
+                } catch (java.sql.SQLException e) {
+                    attempt--;
+                    if (attempt < 1) {
+                        this.connection = null;
+                        this.connected = false;
+                        e.printStackTrace();
+                    } else {
+                        try {
+                            Thread.sleep(DELAY_BETWEEN_ATTEMPTS);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
             }
@@ -103,7 +107,7 @@ public class DatabaseController {
 
 
     private void close() {
-        if(this.connection != null) {
+        if (this.connection != null) {
             try {
                 this.connection.close();
             } catch (SQLException e) {

@@ -40,4 +40,8 @@ public class Seat{
     //--------------------------------------------------------------------------------
     //endregion
 
+    public void print() {
+        System.out.println("Row: " + row + "\tColumn: " + column);
+    }
+
 }

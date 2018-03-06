@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,10 +10,16 @@ public class TempTest
 {
     public static void main(String[] args)
     {
+        String query = "SELECT * FROM FlightSeats WHERE Row < ? AND Column = ?;";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(4);
+        params.add("A");
+
+
         DatabaseController db = new DatabaseController();
-        List<Seat> x = db.executeQuery("SELECT * FROM FlightSeats;", SearchController.seatInitializer);
+        List<Seat> x = db.executeQuery(query, params, SearchController.seatInitializer);
         for(int i = 0; i < x.size(); i++) {
-            System.out.println(x.get(i).getRow());
+            x.get(i).print();
         }
     }
 }
