@@ -27,13 +27,11 @@ public class DatabaseController {
         this(DEFAULT_DATABASE_URL);
     }
 
-
     public DatabaseController(String databaseUrl) {
         this.databaseUrl = databaseUrl;
         this.connection = null;
         this.connected = false;
     }
-
 
     private <T> ArrayList<T> convertResultSetToArray(ResultSet rs, Initializer<T> initializer) {
         ArrayList<T> results = new ArrayList<>();
@@ -55,33 +53,69 @@ public class DatabaseController {
         return null;
     }
 
-
     public <T> ArrayList<T> executeQuery(String query, ArrayList<Object> params, Initializer<T> initializer) {
-        this.connect();
-        query = query.trim();
         ArrayList<T> results = null;
-        try {
-            PreparedStatement stmt = this.connection.prepareStatement(query);
-            for(int i = 0; i < params.size(); i++) {
-                stmt.setObject(i+1, params.get(i));
-            }
-            ResultSet rs = stmt.executeQuery();
-            if (query.substring(0, 6).toLowerCase().equals("select")) {
+        PreparedStatement stmt = this.prepareStatement(query, params);
+        if(stmt != null) {
+            try {
+                ResultSet rs = stmt.executeQuery();
                 results = this.convertResultSetToArray(rs, initializer);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         this.close();
         return results;
     }
 
+    public <T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
+        return this.executeQuery(query, null, initializer);
+    }
+
+    public boolean execute(String query, ArrayList<Object> params) {
+        boolean success = true;
+        PreparedStatement stmt = this.prepareStatement(query, params);
+        if(stmt != null) {
+            try {
+                stmt.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                success = false;
+            }
+        }
+        else{
+            success = false;
+        }
+        this.close();
+        return success;
+    }
+
+    public boolean execute(String query) {
+        return this.execute(query, null);
+    }
+
+    private PreparedStatement prepareStatement(String query, ArrayList<Object> params) {
+        this.connect();
+        if(this.connected) {
+            query = query.trim();
+            try {
+                PreparedStatement stmt = this.connection.prepareStatement(query);
+                if (params != null) {
+                    for (int i = 0; i < params.size(); i++) {
+                        stmt.setObject(i + 1, params.get(i));
+                    }
+                }
+                return stmt;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
     private void connect() {
         if (!this.connected) {
             int attempt = MAX_CONNECTION_ATTEMPTS;
-            // Attempts
             while (attempt > 0) {
                 try {
                     connection = DriverManager.getConnection(this.databaseUrl);
@@ -104,7 +138,6 @@ public class DatabaseController {
             }
         }
     }
-
 
     private void close() {
         if (this.connection != null) {

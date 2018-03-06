@@ -11,4 +11,12 @@ public class SearchController {
 
         return new Seat(row, column, isAvailable, isFirstClass);
     });
+
+    public static final Initializer<User> userInitializer = (map -> {
+        String name = (String) map.get("Name");
+        boolean isMinor = (int) map.get("IsMinor") == 1;
+        String passportNumber = (String) map.get("PassportNumber");
+
+        return new User(name, isMinor, passportNumber);
+    });
 }
