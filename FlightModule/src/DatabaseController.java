@@ -1,5 +1,7 @@
+
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.List;
+import java.util.*;
 
 public class DatabaseController {
 
@@ -33,34 +35,41 @@ public class DatabaseController {
     }
 
 
-    private void executeQuery(String query, boolean close) {
+    private<T> ArrayList<T> convertResultSetToArray(ResultSet rs, Class<T> type){
+        ArrayList<T> results = new ArrayList<T>();
+        try {
+            ResultSetMetaData metadata = rs.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
+
+            while(rs.next()) {
+                HashMap<String, Object> row = new HashMap<>(numberOfColumns);
+                for(int i = 1; i <= numberOfColumns; i++) {
+                    row.put(metadata.getColumnName(i), rs.getObject(i));
+                }
+                results.add(type.getConstructor(row.getClass()).newInstance(row));
+            }
+            return results;
+        } catch (SQLException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public<T> ArrayList<T> executeQuery(String query, Class<T> type) {
         if(!this.connected) {
             this.connect();
         }
-        Statement stmt = null;
         try {
-            stmt = this.connection.createStatement();
+            Statement stmt = this.connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()) {
-                System.out.println(rs.getString("AirplaneType"));
-            }
+            return this.convertResultSetToArray(rs, type);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(close) {
-            this.close();
-        }
-    }
-
-
-    public void executeQuery(String query) {
-        this.executeQuery(query, true);
-    }
-
-
-    public void executeQueries(List<String> queries) {
-        queries.forEach(query -> this.executeQuery(query, false));
         this.close();
+        return null;
     }
 
 
@@ -91,6 +100,7 @@ public class DatabaseController {
             }
         }
     }
+
 
     private void close() {
         if(this.connection != null) {

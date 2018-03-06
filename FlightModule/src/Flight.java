@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Flight {
 
@@ -26,6 +27,13 @@ public class Flight {
     private final boolean hasEntertainment;
     //--------------------------------------------------------------------------------
     //endregion
+
+    // TODO: Implement generic constructor
+    /* public Flight(HashMap<String, Object> args) {
+        this.flightNumber = (String) args.get("FlightNumber");
+        ...
+    } */
+
 
 
     public Flight(String flightNumber, String airline, int priceCoach, int priceFirstClass,

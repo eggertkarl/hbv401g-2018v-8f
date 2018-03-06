@@ -8,6 +8,11 @@ public class User {
     //--------------------------------------------------------------------------------
     //endregion
 
+    // TODO: Implement generic constructor
+    /* public User(HashMap<String, Object> args) {
+        this.name = (String) args.get("???");
+        ...
+    } */
 
     public User(String name, boolean isMinor, String passportNumber) {
         this.name = name;

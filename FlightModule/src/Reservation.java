@@ -12,6 +12,12 @@ public class Reservation {
     //endregion
 
 
+    // TODO: Implement generic constructor
+    /* public Reservation(HashMap<String, Object> args) {
+        this.bags = (int) args.get("???");
+        ...
+    } */
+
     public Reservation(String flightNumber, User user, Seat seat, int bags, boolean hasVegeterianMeal) {
         this.flightNumber = flightNumber;
         this.user = user;
