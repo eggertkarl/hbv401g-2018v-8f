@@ -1,6 +1,7 @@
 public class SearchController {
     // TODO: Implement
 
+    // TODO: Set to private
     public static final Initializer<Seat> seatInitializer = (map -> {
         int row = (int) map.get("Row");
         String column = (String) map.get("Column");
@@ -12,6 +13,7 @@ public class SearchController {
         return new Seat(row, column, isAvailable, isFirstClass);
     });
 
+    // TODO: Set to private
     public static final Initializer<User> userInitializer = (map -> {
         String name = (String) map.get("Name");
         boolean isMinor = (int) map.get("IsMinor") == 1;
