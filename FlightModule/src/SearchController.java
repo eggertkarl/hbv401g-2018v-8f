@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SearchController {
+public class SearchController extends DatabaseController {
     // TODO: Implement
 
     // TODO: Set to private
@@ -48,14 +48,9 @@ public class SearchController {
 
 
 
-    private DatabaseController db;
-
-    public SearchController() {
-        this.db = new DatabaseController();
-    }
 
     public ArrayList<Flight> searchForAllFlights() {
-        return db.executeQuery("SELECT * FROM Flights;", flightInitializer);
+        return executeQuery("SELECT * FROM Flights;", flightInitializer);
     }
 
     public ArrayList<Flight> searchForAllFlightsFilterByAirline(String airline) {
@@ -68,6 +63,6 @@ public class SearchController {
         ArrayList<Object> params = new ArrayList<>();
         params.add(airline);
         String query = "SELECT * FROM Flights WHERE Airline LIKE ?;";
-        return db.executeQuery(query, params, flightInitializer);
+        return executeQuery(query, params, flightInitializer);
     }
 }

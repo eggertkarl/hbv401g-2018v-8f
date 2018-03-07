@@ -1,3 +1,3 @@
-public class BookingController {
+public class BookingController extends DatabaseController{
     // TODO: Implement
 }

@@ -3,7 +3,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.*;
 
-public class DatabaseController {
+class DatabaseController {
 
     //region Constants
     //--------------------------------------------------------------------------------
@@ -23,11 +23,11 @@ public class DatabaseController {
     //endregion
 
 
-    public DatabaseController() {
+    DatabaseController() {
         this(DEFAULT_DATABASE_URL);
     }
 
-    public DatabaseController(String databaseUrl) {
+    DatabaseController(String databaseUrl) {
         this.databaseUrl = databaseUrl;
         this.connection = null;
         this.connected = false;
@@ -71,7 +71,7 @@ public class DatabaseController {
      * @param initializer Function that passes values to the constructor of T.
      * @return Results from the executed query. Returns null if the execution was unsuccessful.
      */
-    public <T> ArrayList<T> executeQuery(String query, ArrayList<Object> params, Initializer<T> initializer) {
+    protected <T> ArrayList<T> executeQuery(String query, ArrayList<Object> params, Initializer<T> initializer) {
         ArrayList<T> results = null;
         PreparedStatement stmt = this.prepareStatement(query, params);
         if(stmt != null) {
@@ -94,7 +94,7 @@ public class DatabaseController {
      * @param initializer Function that passes values to the constructor of T.
      * @return Results from the executed query. Returns null if the execution was unsuccessful.
      */
-    public <T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
+    protected <T> ArrayList<T> executeQuery(String query, Initializer<T> initializer) {
         return this.executeQuery(query, null, initializer);
     }
 
@@ -106,7 +106,7 @@ public class DatabaseController {
      * @param params List of arguments to include in the SQL statement.
      * @return True if the SQL statement is successfully executed.
      */
-    public boolean execute(String query, ArrayList<Object> params) {
+    protected boolean execute(String query, ArrayList<Object> params) {
         boolean success = true;
         PreparedStatement stmt = this.prepareStatement(query, params);
         if(stmt != null) {
@@ -131,7 +131,7 @@ public class DatabaseController {
      * @param query A valid SQL statement.
      * @return True if the SQL statement is successfully executed.
      */
-    public boolean execute(String query) {
+    protected boolean execute(String query) {
         return this.execute(query, null);
     }
 
