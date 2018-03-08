@@ -1,9 +1,11 @@
+import java.time.LocalDateTime;
+
 public class Reservation {
 
     //region Attributes
     //--------------------------------------------------------------------------------
     private String flightNumber;
-    // private String departureTime;
+    private LocalDateTime departureTime;
     private User user;
     private Seat seat;
     private int bags;
@@ -18,8 +20,9 @@ public class Reservation {
         ...
     } */
 
-    public Reservation(String flightNumber, User user, Seat seat, int bags, boolean hasVegeterianMeal) {
+    public Reservation(String flightNumber, LocalDateTime departureTime, User user, Seat seat, int bags, boolean hasVegeterianMeal) {
         this.flightNumber = flightNumber;
+        this.departureTime = departureTime;
         this.user = user;
         this.seat = seat;
         this.bags = bags;
@@ -48,6 +51,10 @@ public class Reservation {
     public void setHasVegeterianMeal(boolean hasVegeterianMeal) {
         this.hasVegeterianMeal = hasVegeterianMeal;
     }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
     //--------------------------------------------------------------------------------
     //endregion
 
@@ -73,6 +80,11 @@ public class Reservation {
     public boolean hasVegeterianMeal() {
         return hasVegeterianMeal;
     }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
     //--------------------------------------------------------------------------------
     //endregion
 }

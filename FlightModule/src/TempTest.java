@@ -15,9 +15,9 @@ public class TempTest
         DatabaseController db = new DatabaseController();
 
         selectAllSeats(db);
-        createTwoUsers(db);
+        //createTwoUsers(db);
         selectAllUsers(db);
-        deleteAllUsers(db);
+        //deleteAllUsers(db);
 
 
         // SearchController sort of started.

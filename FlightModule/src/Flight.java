@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,8 +9,9 @@ public class Flight {
     // Flight metadata:
     private final String flightNumber;
     private final String airline;
-    private final int priceCoach;
+    private final String airplaneType;
     private final int priceFirstClass;
+    private final int priceCoach;
     private final ArrayList<Seat> seats;
     private final int seatCountFirstClassAvailable;
     private final int seatCountCouchAvailable;
@@ -17,9 +19,8 @@ public class Flight {
     // Flight location and datetime:
     private final String departureLocation;
     private final String arrivalLocation;
-    // TODO: Figure out best way to store datetime.
-    // private final String departureTime;
-    // private final String arrivalTime;
+    private final LocalDateTime departureTime;
+    private final LocalDateTime arrivalTime;
 
     // Perks:
     private final boolean hasMeal;
@@ -28,29 +29,24 @@ public class Flight {
     //--------------------------------------------------------------------------------
     //endregion
 
-    // TODO: Implement generic constructor
-    /* public Flight(HashMap<String, Object> args) {
-        this.flightNumber = (String) args.get("FlightNumber");
-        ...
-    } */
 
 
-
-    public Flight(String flightNumber, String airline, int priceCoach, int priceFirstClass,
+    public Flight(String flightNumber, String airline, String airplaneType, int priceCoach, int priceFirstClass,
                   int seatCountFirstClassAvailable, int seatCountCouchAvailable, String departureLocation,
-                  String arrivalLocation, boolean hasMeal, boolean hasVegeterianMeal, boolean hasEntertainment) {
+                  String arrivalLocation, LocalDateTime departureTime, LocalDateTime arrivalTime,
+                  boolean hasMeal, boolean hasVegeterianMeal, boolean hasEntertainment) {
         this.flightNumber = flightNumber;
         this.airline = airline;
+        this.airplaneType = airplaneType;
         this.priceCoach = priceCoach;
         this.priceFirstClass = priceFirstClass;
-        this.seats = new ArrayList<Seat>();
+        this.seats = new ArrayList<>();
         this.seatCountFirstClassAvailable = seatCountFirstClassAvailable;
         this.seatCountCouchAvailable = seatCountCouchAvailable;
         this.departureLocation = departureLocation;
-
-        // departureTime = null;
-        // arrivalLocation = null;
         this.arrivalLocation = arrivalLocation;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
         this.hasMeal = hasMeal;
         this.hasVegeterianMeal = hasVegeterianMeal;
         this.hasEntertainment = hasEntertainment;
@@ -60,7 +56,6 @@ public class Flight {
     //region Setters
     //--------------------------------------------------------------------------------
     public void setSeats(ArrayList<Seat> seats) {
-        // TODO: Is it enough to set once? Should be.
         // Can only be set once.
         if(this.seats.size() == 0) {
             for(Seat seat : seats) {
@@ -110,6 +105,14 @@ public class Flight {
         return arrivalLocation;
     }
 
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
     public boolean hasMeal() {
         return hasMeal;
     }
@@ -121,6 +124,11 @@ public class Flight {
     public boolean hasEntertainment() {
         return hasEntertainment;
     }
+
+    public String getAirplaneType() {
+        return airplaneType;
+    }
+
     //--------------------------------------------------------------------------------
     //endregion
 }
