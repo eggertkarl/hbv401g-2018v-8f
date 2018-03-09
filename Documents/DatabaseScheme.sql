@@ -31,6 +31,19 @@ CREATE TABLE Flights(
   FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
 );
 
+CREATE TABLE Reviews(
+  FlightNumber VARCHAR,
+  Airline VARCHAR,
+  DepartureTime VARCHAR,
+  Name VARCHAR,
+  PassportNumber VARCHAR,
+  Rating INT,
+  Comment VARCHAR,
+  PRIMARY KEY (FlightNumber, DepartureTime, Name, PassportNumber),
+  FOREIGN KEY (FlightNumber, DepartureTime) REFERENCES Flights(FlightNumber, DepartureTime),
+  FOREIGN KEY (Name, PassportNumber) REFERENCES Users(Name, PassportNumber)
+);
+
 
 CREATE TABLE Users(
   Name VARCHAR,

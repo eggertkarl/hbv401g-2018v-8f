@@ -4,15 +4,15 @@ public class Seat{
 
     //region Attributes
     //--------------------------------------------------------------------------------
-    private final int row;
+    private final Integer row;
     private final String column;
-    private final boolean isAvailable;
-    private final boolean isFirstClass;
+    private final Boolean isAvailable;
+    private final Boolean isFirstClass;
     //--------------------------------------------------------------------------------
     //endregion
 
 
-    public Seat(int row, String column, boolean isAvailable, boolean isFirstClass) {
+    public Seat(Integer row, String column, Boolean isAvailable, Boolean isFirstClass) {
         this.row = row;
         this.column = column;
         this.isAvailable = isAvailable;
@@ -22,7 +22,7 @@ public class Seat{
 
     //region Getters
     //--------------------------------------------------------------------------------
-    public int getRow() {
+    public Integer getRow() {
         return row;
     }
 
@@ -30,11 +30,11 @@ public class Seat{
         return column;
     }
 
-    public boolean isAvailable() {
+    public Boolean isAvailable() {
         return isAvailable;
     }
 
-    public boolean isFirstClass() {
+    public Boolean isFirstClass() {
         return isFirstClass;
     }
     //--------------------------------------------------------------------------------

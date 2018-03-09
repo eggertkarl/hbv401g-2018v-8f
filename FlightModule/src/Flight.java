@@ -10,34 +10,36 @@ public class Flight {
     private final String flightNumber;
     private final String airline;
     private final String airplaneType;
-    private final int priceFirstClass;
-    private final int priceCoach;
+    private final Integer priceFirstClass;
+    private final Integer priceCoach;
     private final ArrayList<Seat> seats;
 
-    private final int totalSeatsFirstClass;
-    private final int totalSeatsCoach;
-    private final int reservedSeatsFirstClass;
-    private final int reservedSeatsCoach;
+    private final Integer totalSeatsFirstClass;
+    private final Integer totalSeatsCoach;
+    private final Integer reservedSeatsFirstClass;
+    private final Integer reservedSeatsCoach;
 
     // Flight location and datetime:
     private final String departureLocation;
     private final String arrivalLocation;
     private final LocalDateTime departureTime;
     private final LocalDateTime arrivalTime;
+    private final Double averageRating;
 
     // Perks:
-    private final boolean hasMeal;
-    private final boolean hasVegeterianMeal;
-    private final boolean hasEntertainment;
+    private final Boolean hasMeal;
+    private final Boolean hasVegeterianMeal;
+    private final Boolean hasEntertainment;
     //--------------------------------------------------------------------------------
     //endregion
 
 
 
-    public Flight(String flightNumber, String airline, String airplaneType, int priceCoach, int priceFirstClass,
-                  int totalSeatsFirstClass, int totalSeatsCoach, int reservedSeatsFirstClass, int reservedSeatsCoach,
-                  String departureLocation, String arrivalLocation, LocalDateTime departureTime,
-                  LocalDateTime arrivalTime, boolean hasMeal, boolean hasVegeterianMeal, boolean hasEntertainment) {
+    public Flight(String flightNumber, String airline, String airplaneType, Integer priceCoach, Integer priceFirstClass,
+                  Integer totalSeatsFirstClass, Integer totalSeatsCoach, Integer reservedSeatsFirstClass,
+                  Integer reservedSeatsCoach, String departureLocation, String arrivalLocation,
+                  LocalDateTime departureTime, LocalDateTime arrivalTime, Double averageRating, Boolean hasMeal,
+                  Boolean hasVegeterianMeal, Boolean hasEntertainment) {
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.airplaneType = airplaneType;
@@ -55,6 +57,7 @@ public class Flight {
         this.hasMeal = hasMeal;
         this.hasVegeterianMeal = hasVegeterianMeal;
         this.hasEntertainment = hasEntertainment;
+        this.averageRating = averageRating;
     }
 
 
@@ -82,11 +85,11 @@ public class Flight {
         return airline;
     }
 
-    public int getPriceCoach() {
+    public Integer getPriceCoach() {
         return priceCoach;
     }
 
-    public int getPriceFirstClass() {
+    public Integer getPriceFirstClass() {
         return priceFirstClass;
     }
 
@@ -110,15 +113,15 @@ public class Flight {
         return arrivalTime;
     }
 
-    public boolean hasMeal() {
+    public Boolean hasMeal() {
         return hasMeal;
     }
 
-    public boolean hasVegeterianMeal() {
+    public Boolean hasVegeterianMeal() {
         return hasVegeterianMeal;
     }
 
-    public boolean hasEntertainment() {
+    public Boolean hasEntertainment() {
         return hasEntertainment;
     }
 
@@ -126,20 +129,24 @@ public class Flight {
         return airplaneType;
     }
 
-    public int getTotalSeatsFirstClass() {
+    public Integer getTotalSeatsFirstClass() {
         return totalSeatsFirstClass;
     }
 
-    public int getTotalSeatsCoach() {
+    public Integer getTotalSeatsCoach() {
         return totalSeatsCoach;
     }
 
-    public int getReservedSeatsFirstClass() {
+    public Integer getReservedSeatsFirstClass() {
         return reservedSeatsFirstClass;
     }
 
-    public int getReservedSeatsCoach() {
+    public Integer getReservedSeatsCoach() {
         return reservedSeatsCoach;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
     }
 
     //--------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ public class User {
     //region Attributes
     //--------------------------------------------------------------------------------
     private String name;
-    private boolean isMinor;
+    private Boolean isMinor;
     private String passportNumber;
     //--------------------------------------------------------------------------------
     //endregion
@@ -14,7 +14,7 @@ public class User {
         ...
     } */
 
-    public User(String name, boolean isMinor, String passportNumber) {
+    public User(String name, Boolean isMinor, String passportNumber) {
         this.name = name;
         this.isMinor = isMinor;
         this.passportNumber = passportNumber;
@@ -28,7 +28,7 @@ public class User {
         this.name = name;
     }
 
-    public void setMinor(boolean minor) {
+    public void setMinor(Boolean minor) {
         // TODO: Add checks if necessary
         isMinor = minor;
     }
@@ -47,7 +47,7 @@ public class User {
         return name;
     }
 
-    public boolean isMinor() {
+    public Boolean isMinor() {
         return isMinor;
     }
 

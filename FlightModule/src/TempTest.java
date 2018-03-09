@@ -14,20 +14,23 @@ public class TempTest
     {
         SearchController sc = new SearchController();
 
-        ArrayList<Flight> flights = sc.searchForAllFlightsFilterByAirline("Icelandair");
+        ArrayList<Flight> flights = sc.searchForAllFlights();
+        //ArrayList<Flight> flights = sc.searchForAllFlightsFilterByAirline("Icelandair");
 
         System .out.println("Flights found: ");
         for(int i = 0; i < flights.size(); i++) {
             System.out.println(flights.get(i).getFlightNumber()
-                    + ",\t Reserved seats (first class): " + flights.get(i).getReservedSeatsFirstClass());
+                    + ",\t Reserved seats (first class): " + flights.get(i).getReservedSeatsFirstClass()
+                    + "\tRating: " + flights.get(i).getAverageRating());
         }
 
+        /*
         Flight flight = flights.get(0);
         sc.fetchSeats(flight);
         ArrayList<Seat> seats = flight.getSeats();
         for(int i = 0; i < seats.size(); i++) {
             System.out.println(seats.get(i).isAvailable());
-        }
+        } */
     }
 
 }

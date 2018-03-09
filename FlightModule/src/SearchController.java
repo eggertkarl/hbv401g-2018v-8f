@@ -1,58 +1,61 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SearchController extends DatabaseController {
 
 
     //region Initializers
     //--------------------------------------------------------------------------------
-    private static final Initializer<Seat> seatInitializer = (map -> {
-        int row = (int) map.get(SeatColumns.row);
-        String column = (String) map.get(SeatColumns.column);
-        boolean isAvailable = (int) map.get(SeatColumns.isAvailable) == 1;
-        boolean isFirstClass = (int) map.get(SeatColumns.isFirstClass) == 1;
+    private static final Initializer<Seat> seatInitializer = new Initializer<Seat>() {
+        @Override
+        Seat create(HashMap<String, Object> map) {
+            set(map);
+            return new Seat(
+                    getInt(SeatColumns.row),
+                    getString(SeatColumns.column),
+                    getBoolean(SeatColumns.isAvailable),
+                    getBoolean(SeatColumns.isFirstClass)
+            );
+        }
+    };
 
-        return new Seat(row, column, isAvailable, isFirstClass);
-    });
+    private static final Initializer<User> userInitializer = new Initializer<User>() {
+        @Override
+        User create(HashMap<String, Object> map) {
+            set(map);
+            return new User(
+                    getString(UserColumns.name),
+                    getBoolean(UserColumns.isMinor),
+                    getString(UserColumns.passportNumber));
+        }
+    };
 
-    private static final Initializer<User> userInitializer = (map -> {
-        String name = (String) map.get(UserColumns.name);
-        boolean isMinor = (int) map.get(UserColumns.isMinor) == 1;
-        String passportNumber = (String) map.get(UserColumns.passportNumber);
-
-        return new User(name, isMinor, passportNumber);
-    });
-
-    private static final Initializer<Flight> flightInitializer = (map -> {
-        String flightNumber = (String) map.get(FlightColumns.flightNumber);
-        String airline = (String) map.get(FlightColumns.airline);
-        String airplaneType = (String) map.get(FlightColumns.airplaneType);
-        int priceCoach = (int) map.get(FlightColumns.priceCoach);
-        int priceFirstClass = (int) map.get(FlightColumns.priceFirstClass);
-
-        int totalSeatsFirstClass = (int) map.get(FlightColumns.totalSeatsFirstClass);
-        int totalSeatsCoach = (int) map.get(FlightColumns.totalSeatsCoach);
-        int reservedSeatsFirstClass = (int) map.get(FlightColumns.reservedSeatsFirstClass);
-        int reservedSeatsCoach = (int) map.get(FlightColumns.reservedSeatsCoach);
-
-        String departureLocation = (String) map.get(FlightColumns.departureLocation);
-        String arrivalLocation = (String) map.get(FlightColumns.arrivalLocation);
-
-        String arrivalTimeText = (String) map.get(FlightColumns.arrivalTime);
-        String departureTimeText = (String) map.get(FlightColumns.departureTime);
-        LocalDateTime arrivalTime = convertStringToLocalDateTime(arrivalTimeText);
-        LocalDateTime departureTime = convertStringToLocalDateTime(departureTimeText);
-
-
-        boolean hasMeal = (int) map.get(FlightColumns.hasMeal) == 1;
-        boolean hasVegeterianMeal = (int) map.get(FlightColumns.hasVegeterianMeal) == 1;
-        boolean hasEntertainment = (int) map.get(FlightColumns.hasEntertainment) == 1;
-
-        return new Flight(flightNumber, airline, airplaneType, priceCoach, priceFirstClass,
-                totalSeatsFirstClass, totalSeatsCoach, reservedSeatsFirstClass, reservedSeatsCoach,
-                departureLocation, arrivalLocation, departureTime, arrivalTime, hasMeal,
-                hasVegeterianMeal, hasEntertainment);
-    });
+    private static final Initializer<Flight> flightInitializer = new Initializer<Flight>() {
+        @Override
+        Flight create(HashMap<String, Object> map) {
+            set(map);
+            return new Flight(
+                    getString(FlightColumns.flightNumber),
+                    getString(FlightColumns.airline),
+                    getString(FlightColumns.airplaneType),
+                    getInt(FlightColumns.priceCoach),
+                    getInt(FlightColumns.priceFirstClass),
+                    getInt(FlightColumns.totalSeatsFirstClass),
+                    getInt(FlightColumns.totalSeatsCoach),
+                    getInt(FlightColumns.reservedSeatsFirstClass),
+                    getInt(FlightColumns.reservedSeatsCoach),
+                    getString(FlightColumns.departureLocation),
+                    getString(FlightColumns.arrivalLocation),
+                    getDateTime(FlightColumns.departureTime),
+                    getDateTime(FlightColumns.arrivalTime),
+                    getDouble(FlightColumns.averageRating),
+                    getBoolean(FlightColumns.hasMeal),
+                    getBoolean(FlightColumns.hasVegeterianMeal),
+                    getBoolean(FlightColumns.hasEntertainment)
+            );
+        }
+    };
     //--------------------------------------------------------------------------------
     //endregion
 
@@ -144,6 +147,13 @@ public class SearchController extends DatabaseController {
     //--------------------------------------------------------------------------------
     private ArrayList<Flight> searchForFlights(String[] filters, Object[] params) {
 
+        if(filters == null) {
+            filters = new String[0];
+        }
+        if(params == null) {
+            params = new Object[0];
+        }
+
         ArrayList<String> usedFilters = new ArrayList<>();
         ArrayList<Object> usedParams = new ArrayList<>();
 
@@ -168,45 +178,62 @@ public class SearchController extends DatabaseController {
 
     private String getFlightQuery(ArrayList<String> filters) {
         String query =
-              "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
+                "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
             + "\n	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,"
-            + "\n	HasEntertainment, " + FlightColumns.totalSeatsCoach + "," + FlightColumns.totalSeatsFirstClass + ","
+            + "\n	HasEntertainment, " + FlightColumns.averageRating + ", "
+            + "\n" + FlightColumns.totalSeatsCoach + ", " + FlightColumns.totalSeatsFirstClass + ","
             + "\n	IFNULL(" + FlightColumns.reservedSeatsCoach + ", 0) " + FlightColumns.reservedSeatsCoach + ","
             + "\n	IFNULL(" + FlightColumns.reservedSeatsFirstClass + ", 0) " + FlightColumns.reservedSeatsFirstClass
             + "\n FROM ("
             + "\n	SELECT * FROM ("
-            + "\n	("
-            + "\n		SELECT * FROM Flights"
-            + "\n     -- WHERE <FILTERS>" // This is replaced with filters if necessary.
-            + "\n	) F"
+            + "\n	"
+            + "\n	SELECT * FROM ("
+            + "\n		("
+            + "\n			SELECT * FROM Flights"
+            + "\n			-- WHERE <FILTERS>"
+            + "\n		) F -- F is an alias for the table that selects all flights that match the filters"
+            + "\n		LEFT JOIN"
+            + "\n		("
+            + "\n	   	 -- Counting seats (coach and first class) per airplane type."
+            + "\n			SELECT"
+            + "\n				AirplaneType,"
+            + "\n				COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.totalSeatsCoach + ","
+            + "\n				COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS " + FlightColumns.totalSeatsFirstClass
+            + "\n			FROM FlightSeats"
+            + "\n			GROUP BY AirplaneType"
+            + "\n		) S -- S is an alias for the table that counts the seats (coach and first class) per airplane type."
+            + "\n		ON F.AirplaneType = S.AirplaneType"
+            + "\n	) T"
             + "\n	LEFT JOIN "
             + "\n	("
-            + "\n		SELECT "
-            + "\n			AirplaneType, "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.totalSeatsCoach + ",  "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS " + FlightColumns.totalSeatsFirstClass
-            + "\n		FROM FlightSeats"
-            + "\n		GROUP BY AirplaneType"
-            + "\n	) S"
-            + "\n	ON F.AirplaneType = S.AirplaneType"
-            + "\n	) T -- Total count"
-            + "\n	LEFT JOIN "
+            + "\n		SELECT Airline, AVG(Rating) AS " + FlightColumns.averageRating
+            + "\n		FROM Reviews"
+            + "\n	) D"
+            + "\n	ON D.Airline = T.Airline"
+            + "\n	) A "
+            + "\n"
+            + "\n	LEFT JOIN"
+            + "\n"
             + "\n	("
-            + "\n		SELECT FlightNumber, DepartureTime, "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.reservedSeatsCoach + ", "
+            + "\n	  -- Counting reserved seats (coach and first class)"
+            + "\n		SELECT FlightNumber, DepartureTime,"
+            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.reservedSeatsCoach + ","
             + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS " + FlightColumns.reservedSeatsFirstClass
             + "\n		FROM ("
-            + "\n			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R"
-            + "\n			LEFT JOIN "
-            + "\n			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S"
-            + "\n			ON R.SeatRow = S.Row"
-            + "\n			AND R.SeatColumn = S.Column"
-            + "\n			AND R.AirplaneType = S.AirplaneType"
+            + "\n			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R -- alias"
+            + "\n			LEFT JOIN"
+            + "\n			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) C"
+            + "\n			-- C is an alias for a subset of the FlightSeats table"
+            + "\n			ON R.SeatRow = C.Row"
+            + "\n			AND R.SeatColumn = C.Column"
+            + "\n			AND R.AirplaneType = C.AirplaneType"
             + "\n		)"
-            + "\n	) B -- Booked count"
-            + "\n	ON T.FlightNumber = B.FlightNumber"
-            + "\n	AND T.DepartureTime = B.DepartureTime"
+            + "\n	) B -- B is an alias for the table that is used to keep track of what seats have been reserved"
+            + "\n	ON A.FlightNumber = B.FlightNumber"
+            + "\n	AND A.DepartureTime = B.DepartureTime"
             + "\n);";
+
+
         if(filters == null) {
             return query;
         }
@@ -239,6 +266,7 @@ public class SearchController extends DatabaseController {
         static final String totalSeatsCoach = "TotalSeatsCoach";
         static final String reservedSeatsFirstClass = "ReservedSeatsFirstClass";
         static final String reservedSeatsCoach = "ReservedSeatsCoach";
+        static final String averageRating = "AverageRating";
     }
 
     private static class SeatColumns {

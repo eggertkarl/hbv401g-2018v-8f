@@ -1,11 +1,13 @@
 SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,
-	HasEntertainment, TotalSeatsCoach, TotalSeatsFirstClass,
+	HasEntertainment, AverageRating, TotalSeatsCoach, TotalSeatsFirstClass,
 	IFNULL(ReservedSeatsCoach, 0) ReservedSeatsCoach,
 	IFNULL(ReservedSeatsFirstClass, 0) ReservedSeatsFirstClass
  FROM (
 
   -- Selecting all flights that match the filters
+	SELECT * FROM (
+
 	SELECT * FROM (
 		(
 			SELECT * FROM Flights
@@ -22,7 +24,14 @@ SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 			GROUP BY AirplaneType
 		) S -- S is an alias for the table that counts the seats (coach and first class) per airplane type.
 		ON F.AirplaneType = S.AirplaneType
-	) T -- T is an alias for the table that joins F and S by AirplaneType; Total count(?)
+	) T
+	LEFT JOIN
+	(
+		SELECT Airline, AVG(Rating) AS AverageRating
+		FROM Reviews
+	) D
+	ON D.Airline = T.Airline
+	) A
 
 	LEFT JOIN
 
@@ -41,9 +50,6 @@ SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 			AND R.AirplaneType = C.AirplaneType
 		)
 	) B -- B is an alias for the table that is used to keep track of what seats have been reserved
-	ON T.FlightNumber = B.FlightNumber
-	AND T.DepartureTime = B.DepartureTime
+	ON A.FlightNumber = B.FlightNumber
+	AND A.DepartureTime = B.DepartureTime
 );
-
-
-
