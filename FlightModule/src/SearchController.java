@@ -8,9 +8,7 @@ public class SearchController extends DatabaseController {
     public static final Initializer<Seat> seatInitializer = (map -> {
         int row = (int) map.get("Row");
         String column = (String) map.get("Column");
-        boolean isAvailable = true;
-        // TODO: Add isAvailable to query
-        //boolean isAvailable = (boolean) map.get("isAvailable");
+        boolean isAvailable = (int) map.get("IsAvailable") == 1;
         boolean isFirstClass = (int) map.get("IsFirstClass") == 1;
 
         return new Seat(row, column, isAvailable, isFirstClass);
@@ -32,23 +30,28 @@ public class SearchController extends DatabaseController {
         int priceCoach = (int) map.get("PriceCoach");
         int priceFirstClass = (int) map.get("PriceFirstClass");
 
-        // TODO: Add departure time and arrival timea
-        int seatCountFirstClassAvailable = 10; //(int) map.get("FirstClassCount");
-        int seatCountCouchAvailable = 6; //(int) map.get("FlightNumber");
+        int totalSeatsFirstClass = (int) map.get("TotalSeatsFirstClass");
+        int totalSeatsCoach = (int) map.get("TotalSeatsCoach");
+        int reservedSeatsFirstClass = (int) map.get("ReservedSeatsFirstClass");
+        int reservedSeatsCoach = (int) map.get("ReservedSeatsCoach");
 
         String departureLocation = (String) map.get("DepartureLocation");
         String arrivalLocation = (String) map.get("ArrivalLocation");
 
-        LocalDateTime arrivalTime = (LocalDateTime) map.get("ArrivalTime");
-        LocalDateTime departureTime = (LocalDateTime) map.get("DepartureTime");
+        String arrivalTimeText = (String) map.get("ArrivalTime");
+        String departureTimeText = (String) map.get("DepartureTime");
+        LocalDateTime arrivalTime = getDateTime(arrivalTimeText);
+        LocalDateTime departureTime = getDateTime(departureTimeText);
+
 
         boolean hasMeal = (int) map.get("HasMeal") == 1;
         boolean hasVegeterianMeal = (int) map.get("HasVegeterianMeal") == 1;
         boolean hasEntertainment = (int) map.get("HasEntertainment") == 1;
 
         return new Flight(flightNumber, airline, airplaneType, priceCoach, priceFirstClass,
-                seatCountFirstClassAvailable, seatCountCouchAvailable, departureLocation, arrivalLocation,
-                departureTime, arrivalTime, hasMeal, hasVegeterianMeal, hasEntertainment);
+                totalSeatsFirstClass, totalSeatsCoach, reservedSeatsFirstClass, reservedSeatsCoach,
+                departureLocation, arrivalLocation, departureTime, arrivalTime, hasMeal,
+                hasVegeterianMeal, hasEntertainment);
     });
 
 
@@ -58,21 +61,26 @@ public class SearchController extends DatabaseController {
         String airplaneType = flight.getAirplaneType();
 
         String query =
-                "SELECT Row, Column, IsFirstClass, CASE WHEN PassportNumber IS NULL THEN 1 ELSE 0 END AS IsAvailable FROM \n" +
-                "(\n" +
-                "\tSELECT * FROM FlightSeats AS S\n" +
-                "\tLEFT JOIN  Reservations AS R\n" +
-                "\tON R.FlightNumber = ?\n" +
-                "\tAND R.DepartureTime = ?\n" +
-                "\tAND S.Row = R.SeatRow\n" +
-                "\tAND S.Column = R.SeatColumn\n" +
-                ")\n" +
-                "WHERE AirplaneType = ?;";
+                "SELECT Row, Column, IsFirstClass, CASE WHEN PassportNumber IS NULL THEN 1 ELSE 0 END AS IsAvailable FROM "
+            + "\n("                                   // PassportNumber IS NULL  <=>  No user has reserved the seat
+            + "\n	("
+            + "\n		SELECT * FROM FlightSeats "
+            + "\n		WHERE AirplaneType = ?"
+            + "\n	) AS S"
+            + "\n	LEFT JOIN "
+            + "\n	("
+            + "\n		SELECT * FROM Reservations "
+            + "\n		WHERE FlightNumber = ? "
+            + "\n		AND DepartureTime = ?"
+            + "\n	) AS R"
+            + "\n	ON S.Row = R.SeatRow"
+            + "\n	AND S.Column = R.SeatColumn"
+            + "\n);";
 
         ArrayList<Object> params = new ArrayList<>();
+        params.add(airplaneType);
         params.add(flightNumber);
         params.add(departureTime);
-        params.add(airplaneType);
 
         ArrayList<Seat> seats = executeQuery(query, params, seatInitializer);
         if(seats == null) {
@@ -87,8 +95,23 @@ public class SearchController extends DatabaseController {
 
 
     public ArrayList<Flight> searchForAllFlights() {
-        return executeQuery("SELECT * FROM Flights;", flightInitializer);
+        String query = getFlightQuery();
+        return executeQuery(query, flightInitializer);
     }
+
+    public ArrayList<Flight> searchForAllFlightsByDepartureInterval(LocalDateTime start, LocalDateTime end) {
+        ArrayList<String> filters = new ArrayList<>();
+        filters.add("DepartureTime >= ?");
+        filters.add("DepartureTime <= ?");
+        String query = getFlightQuery(filters);
+
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(start);
+        params.add(end);
+
+        return executeQuery(query, params, flightInitializer);
+    }
+
 
     public ArrayList<Flight> searchForAllFlightsFilterByAirline(String airline) {
         if(airline == null) {
@@ -97,9 +120,70 @@ public class SearchController extends DatabaseController {
         if(airline.length() == 0) {
             return searchForAllFlights();
         }
+        ArrayList<String> filters = new ArrayList<>();
+        filters.add("Airline LIKE ?");
+        String query = getFlightQuery(filters);
+
+        // TODO: Filter by 'LIKE' or '='?
         ArrayList<Object> params = new ArrayList<>();
-        params.add(airline);
-        String query = "SELECT * FROM Flights WHERE Airline LIKE ?;";
+        params.add(airline + "%");  // By adding % to the filter, we search for all airlines that START WITH the string.
+
         return executeQuery(query, params, flightInitializer);
+    }
+
+
+    private String getFlightQuery() {
+        return getFlightQuery(null);
+    }
+
+    private String getFlightQuery(ArrayList<String> filters) {
+        String query =
+              "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
+            + "\n	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,"
+            + "\n	HasEntertainment, TotalSeatsCoach, TotalSeatsFirstClass,"
+            + "\n	IFNULL(ReservedSeatsCoach, 0) ReservedSeatsCoach,"
+            + "\n	IFNULL(ReservedSeatsFirstClass, 0) ReservedSeatsFirstClass"
+            + "\n FROM ("
+            + "\n	SELECT * FROM ("
+            + "\n	("
+            + "\n		SELECT * FROM Flights"
+            + "\n     -- WHERE <FILTERS>" // This is replaced with filters if necessary.
+            + "\n	) F"
+            + "\n	LEFT JOIN "
+            + "\n	("
+            + "\n		SELECT "
+            + "\n			AirplaneType, "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS TotalSeatsCoach,  "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS TotalSeatsFirstClass "
+            + "\n		FROM FlightSeats"
+            + "\n		GROUP BY AirplaneType"
+            + "\n	) S"
+            + "\n	ON F.AirplaneType = S.AirplaneType"
+            + "\n	) T -- Total count"
+            + "\n	LEFT JOIN "
+            + "\n	("
+            + "\n		SELECT FlightNumber, DepartureTime, "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS ReservedSeatsCoach, "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS ReservedSeatsFirstClass"
+            + "\n		FROM ("
+            + "\n			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R"
+            + "\n			LEFT JOIN "
+            + "\n			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S"
+            + "\n			ON R.SeatRow = S.Row"
+            + "\n			AND R.SeatColumn = S.Column"
+            + "\n			AND R.AirplaneType = S.AirplaneType"
+            + "\n		)"
+            + "\n	) B -- Booked count"
+            + "\n	ON T.FlightNumber = B.FlightNumber"
+            + "\n	AND T.DepartureTime = B.DepartureTime"
+            + "\n);";
+        if(filters == null) {
+            return query;
+        }
+        if(filters.isEmpty()) {
+            return query;
+        }
+        String filter = "WHERE " + String.join(" AND ", filters);
+        return query.replace("-- WHERE <FILTERS>", filter);
     }
 }

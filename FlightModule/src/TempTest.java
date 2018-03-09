@@ -12,22 +12,29 @@ public class TempTest
 {
     public static void main(String[] args)
     {
-        DatabaseController db = new DatabaseController();
+        //DatabaseController db = new DatabaseController();
 
-        selectAllSeats(db);
+        //selectAllSeats(db);
         //createTwoUsers(db);
-        selectAllUsers(db);
+        //selectAllUsers(db);
         //deleteAllUsers(db);
 
 
-        // SearchController sort of started.
         SearchController sc = new SearchController();
 
         ArrayList<Flight> flights = sc.searchForAllFlightsFilterByAirline("Icelandair");
 
         System .out.println("Flights found: ");
         for(int i = 0; i < flights.size(); i++) {
-            System.out.println(flights.get(i).getFlightNumber());
+            System.out.println(flights.get(i).getFlightNumber()
+                    + ",\t Reserved seats (first class): " + flights.get(i).getReservedSeatsFirstClass());
+        }
+
+        Flight flight = flights.get(0);
+        sc.fetchSeats(flight);
+        ArrayList<Seat> seats = flight.getSeats();
+        for(int i = 0; i < seats.size(); i++) {
+            System.out.println(seats.get(i).isAvailable());
         }
     }
 

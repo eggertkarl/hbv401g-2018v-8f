@@ -1,0 +1,48 @@
+SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
+	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,
+	HasEntertainment, TotalSeatsCoach, TotalSeatsFirstClass,
+	IFNULL(ReservedSeatsCoach, 0) ReservedSeatsCoach,
+	IFNULL(ReservedSeatsFirstClass, 0) ReservedSeatsFirstClass
+ FROM (
+
+  -- Selecting all flights that match the filters
+	SELECT * FROM (
+	(
+		SELECT * FROM Flights
+		-- WHERE <FILTERS>
+	) F
+	LEFT JOIN
+	(
+	  -- Counting seats (coach and first class) per airplane type.
+		SELECT
+			AirplaneType,
+			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS TotalSeatsCoach,
+			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS TotalSeatsFirstClass
+		FROM FlightSeats
+		GROUP BY AirplaneType
+	) S
+	ON F.AirplaneType = S.AirplaneType
+	) T -- Total count
+
+	LEFT JOIN
+
+	(
+	  -- Counting reserved seats (coach and first class)
+		SELECT FlightNumber, DepartureTime,
+			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS ReservedSeatsCoach,
+			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS ReservedSeatsFirstClass
+		FROM (
+			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R
+			LEFT JOIN
+			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S
+			ON R.SeatRow = S.Row
+			AND R.SeatColumn = S.Column
+			AND R.AirplaneType = S.AirplaneType
+		)
+	) B -- Booked count
+	ON T.FlightNumber = B.FlightNumber
+	AND T.DepartureTime = B.DepartureTime
+);
+
+
+

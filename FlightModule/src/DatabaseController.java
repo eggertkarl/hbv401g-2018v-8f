@@ -1,6 +1,8 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 class DatabaseController {
@@ -10,6 +12,8 @@ class DatabaseController {
     private static final String DEFAULT_DATABASE_URL = "jdbc:sqlite:./flights.db";
     private static final int MAX_CONNECTION_ATTEMPTS = 3;
     private static final int DELAY_BETWEEN_ATTEMPTS = 100;
+
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     //--------------------------------------------------------------------------------
     //endregion
 
@@ -205,5 +209,12 @@ class DatabaseController {
             }
         }
         this.connected = false;
+    }
+
+    protected static LocalDateTime getDateTime(String dateText) {
+        if(dateText == null) {
+            return null;
+        }
+        return LocalDateTime.parse(dateText, dateFormatter);
     }
 }

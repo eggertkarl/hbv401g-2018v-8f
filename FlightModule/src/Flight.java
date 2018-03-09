@@ -13,8 +13,11 @@ public class Flight {
     private final int priceFirstClass;
     private final int priceCoach;
     private final ArrayList<Seat> seats;
-    private final int seatCountFirstClassAvailable;
-    private final int seatCountCouchAvailable;
+
+    private final int totalSeatsFirstClass;
+    private final int totalSeatsCoach;
+    private final int reservedSeatsFirstClass;
+    private final int reservedSeatsCoach;
 
     // Flight location and datetime:
     private final String departureLocation;
@@ -32,17 +35,19 @@ public class Flight {
 
 
     public Flight(String flightNumber, String airline, String airplaneType, int priceCoach, int priceFirstClass,
-                  int seatCountFirstClassAvailable, int seatCountCouchAvailable, String departureLocation,
-                  String arrivalLocation, LocalDateTime departureTime, LocalDateTime arrivalTime,
-                  boolean hasMeal, boolean hasVegeterianMeal, boolean hasEntertainment) {
+                  int totalSeatsFirstClass, int totalSeatsCoach, int reservedSeatsFirstClass, int reservedSeatsCoach,
+                  String departureLocation, String arrivalLocation, LocalDateTime departureTime,
+                  LocalDateTime arrivalTime, boolean hasMeal, boolean hasVegeterianMeal, boolean hasEntertainment) {
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.airplaneType = airplaneType;
         this.priceCoach = priceCoach;
         this.priceFirstClass = priceFirstClass;
         this.seats = new ArrayList<>();
-        this.seatCountFirstClassAvailable = seatCountFirstClassAvailable;
-        this.seatCountCouchAvailable = seatCountCouchAvailable;
+        this.totalSeatsFirstClass = totalSeatsFirstClass;
+        this.totalSeatsCoach = totalSeatsCoach;
+        this.reservedSeatsFirstClass = reservedSeatsFirstClass;
+        this.reservedSeatsCoach = reservedSeatsCoach;
         this.departureLocation = departureLocation;
         this.arrivalLocation = arrivalLocation;
         this.departureTime = departureTime;
@@ -89,14 +94,6 @@ public class Flight {
         return seats;
     }
 
-    public int getSeatCountFirstClassAvailable() {
-        return seatCountFirstClassAvailable;
-    }
-
-    public int getSeatCountCouchAvailable() {
-        return seatCountCouchAvailable;
-    }
-
     public String getDepartureLocation() {
         return departureLocation;
     }
@@ -127,6 +124,22 @@ public class Flight {
 
     public String getAirplaneType() {
         return airplaneType;
+    }
+
+    public int getTotalSeatsFirstClass() {
+        return totalSeatsFirstClass;
+    }
+
+    public int getTotalSeatsCoach() {
+        return totalSeatsCoach;
+    }
+
+    public int getReservedSeatsFirstClass() {
+        return reservedSeatsFirstClass;
+    }
+
+    public int getReservedSeatsCoach() {
+        return reservedSeatsCoach;
     }
 
     //--------------------------------------------------------------------------------
