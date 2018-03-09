@@ -40,8 +40,8 @@ public class SearchController extends DatabaseController {
 
         String arrivalTimeText = (String) map.get("ArrivalTime");
         String departureTimeText = (String) map.get("DepartureTime");
-        LocalDateTime arrivalTime = getDateTime(arrivalTimeText);
-        LocalDateTime departureTime = getDateTime(departureTimeText);
+        LocalDateTime arrivalTime = convertStringToLocalDateTime(arrivalTimeText);
+        LocalDateTime departureTime = convertStringToLocalDateTime(departureTimeText);
 
 
         boolean hasMeal = (int) map.get("HasMeal") == 1;
@@ -58,6 +58,7 @@ public class SearchController extends DatabaseController {
     public boolean fetchSeats(Flight flight) {
         String flightNumber = flight.getFlightNumber();
         LocalDateTime departureTime = flight.getDepartureTime();
+        String departureTimeText = convertLocalDateTimeToString(departureTime);
         String airplaneType = flight.getAirplaneType();
 
         String query =
@@ -80,7 +81,7 @@ public class SearchController extends DatabaseController {
         ArrayList<Object> params = new ArrayList<>();
         params.add(airplaneType);
         params.add(flightNumber);
-        params.add(departureTime);
+        params.add(departureTimeText);
 
         ArrayList<Seat> seats = executeQuery(query, params, seatInitializer);
         if(seats == null) {

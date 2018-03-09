@@ -211,10 +211,17 @@ class DatabaseController {
         this.connected = false;
     }
 
-    protected static LocalDateTime getDateTime(String dateText) {
+    protected static LocalDateTime convertStringToLocalDateTime(String dateText) {
         if(dateText == null) {
             return null;
         }
         return LocalDateTime.parse(dateText, dateFormatter);
+    }
+
+    protected static String convertLocalDateTimeToString(LocalDateTime date) {
+        if(date == null) {
+            return null;
+        }
+        return date.format(dateFormatter);
     }
 }
