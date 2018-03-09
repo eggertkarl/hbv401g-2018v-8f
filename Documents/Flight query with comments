@@ -7,22 +7,22 @@ SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 
   -- Selecting all flights that match the filters
 	SELECT * FROM (
-	(
-		SELECT * FROM Flights
-		-- WHERE <FILTERS>
-	) F
-	LEFT JOIN
-	(
-	  -- Counting seats (coach and first class) per airplane type.
-		SELECT
-			AirplaneType,
-			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS TotalSeatsCoach,
-			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS TotalSeatsFirstClass
-		FROM FlightSeats
-		GROUP BY AirplaneType
-	) S
-	ON F.AirplaneType = S.AirplaneType
-	) T -- Total count
+		(
+			SELECT * FROM Flights
+			-- WHERE <FILTERS>
+		) F -- F is an alias for the table that selects all flights that match the filters
+		LEFT JOIN
+		(
+	   	 -- Counting seats (coach and first class) per airplane type.
+			SELECT
+				AirplaneType,
+				COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS TotalSeatsCoach,
+				COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS TotalSeatsFirstClass
+			FROM FlightSeats
+			GROUP BY AirplaneType
+		) S -- S is an alias for the table that counts the seats (coach and first class) per airplane type.
+		ON F.AirplaneType = S.AirplaneType
+	) T -- T is an alias for the table that joins F and S by AirplaneType; Total count(?)
 
 	LEFT JOIN
 
@@ -32,14 +32,14 @@ SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS ReservedSeatsCoach,
 			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS ReservedSeatsFirstClass
 		FROM (
-			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R
+			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R -- alias
 			LEFT JOIN
-			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S
+			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S -- a different S...?
 			ON R.SeatRow = S.Row
 			AND R.SeatColumn = S.Column
 			AND R.AirplaneType = S.AirplaneType
 		)
-	) B -- Booked count
+	) B -- B is an alias for the table that is used to keep track of what seats have been reserved
 	ON T.FlightNumber = B.FlightNumber
 	AND T.DepartureTime = B.DepartureTime
 );
