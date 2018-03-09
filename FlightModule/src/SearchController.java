@@ -2,10 +2,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SearchController extends DatabaseController {
-    // TODO: Implement
 
-    // TODO: Set to private
-    public static final Initializer<Seat> seatInitializer = (map -> {
+
+    //region Initializers
+    //--------------------------------------------------------------------------------
+    private static final Initializer<Seat> seatInitializer = (map -> {
         int row = (int) map.get("Row");
         String column = (String) map.get("Column");
         boolean isAvailable = (int) map.get("IsAvailable") == 1;
@@ -14,8 +15,7 @@ public class SearchController extends DatabaseController {
         return new Seat(row, column, isAvailable, isFirstClass);
     });
 
-    // TODO: Set to private
-    public static final Initializer<User> userInitializer = (map -> {
+    private static final Initializer<User> userInitializer = (map -> {
         String name = (String) map.get("Name");
         boolean isMinor = (int) map.get("IsMinor") == 1;
         String passportNumber = (String) map.get("PassportNumber");
@@ -53,8 +53,12 @@ public class SearchController extends DatabaseController {
                 departureLocation, arrivalLocation, departureTime, arrivalTime, hasMeal,
                 hasVegeterianMeal, hasEntertainment);
     });
+    //--------------------------------------------------------------------------------
+    //endregion
 
 
+    //region Public functions
+    //--------------------------------------------------------------------------------
     public boolean fetchSeats(Flight flight) {
         String flightNumber = flight.getFlightNumber();
         LocalDateTime departureTime = flight.getDepartureTime();
@@ -93,11 +97,14 @@ public class SearchController extends DatabaseController {
         flight.setSeats(seats);
         return true;
     }
+    //--------------------------------------------------------------------------------
+    //endregion
 
 
+    //region Public Search functions
+    //--------------------------------------------------------------------------------
     public ArrayList<Flight> searchForAllFlights() {
-        String query = getFlightQuery();
-        return executeQuery(query, flightInitializer);
+        return searchForFlights(null, null);
     }
 
     public ArrayList<Flight> searchForAllFlightsByDepartureInterval(LocalDateTime start, LocalDateTime end) {
@@ -105,39 +112,59 @@ public class SearchController extends DatabaseController {
                 "DepartureTime >= ?",
                 "DepartureTime <= ?"
         };
-        String query = getFlightQuery(filters);
+        Object[] params = {
+                convertLocalDateTimeToString(start),
+                convertLocalDateTimeToString(end)
+        };
 
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(convertLocalDateTimeToString(start));
-        params.add(convertLocalDateTimeToString(end));
-
-        return executeQuery(query, params, flightInitializer);
+        return searchForFlights(filters, params);
     }
 
 
     public ArrayList<Flight> searchForAllFlightsFilterByAirline(String airline) {
-        if(airline == null) {
-            return searchForAllFlights();
-        }
-        if(airline.length() == 0) {
-            return searchForAllFlights();
-        }
+
+        // This query example selects all names that start with A.
+        // SELECT * FROM Names WHERE Name LIKE 'A%';
+
         String[] filters = {"Airline LIKE ?"};
-        String query = getFlightQuery(filters);
+        Object[] params = {airline + "%"};
 
-        // TODO: Filter by 'LIKE' or '='?
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(airline + "%");  // By adding % to the filter, we search for all airlines that START WITH the string.
-
-        return executeQuery(query, params, flightInitializer);
+        return searchForFlights(filters, params);
     }
+
+    // TODO: Implement more functions with filters.
+
+    //--------------------------------------------------------------------------------
+    //endregion
+
+
+    //region Private utilities
+    //--------------------------------------------------------------------------------
+    private ArrayList<Flight> searchForFlights(String[] filters, Object[] params) {
+
+        ArrayList<String> usedFilters = new ArrayList<>();
+        ArrayList<Object> usedParams = new ArrayList<>();
+
+        int m = Math.min(filters.length, params.length);
+
+        for(int i = 0; i < m; i++) {
+            if(params[i] != null) {
+                usedFilters.add(filters[i]);
+                usedParams.add(params[i]);
+            }
+        }
+
+        String query = getFlightQuery(usedFilters);
+        return executeQuery(query, usedParams, flightInitializer);
+    }
+
 
 
     private String getFlightQuery() {
         return getFlightQuery(null);
     }
 
-    private String getFlightQuery(String[] filters) {
+    private String getFlightQuery(ArrayList<String> filters) {
         String query =
               "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
             + "\n	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,"
@@ -181,10 +208,13 @@ public class SearchController extends DatabaseController {
         if(filters == null) {
             return query;
         }
-        if(filters.length == 0) {
+        if(filters.isEmpty()) {
             return query;
         }
         String filter = "WHERE " + String.join(" AND ", filters);
         return query.replace("-- WHERE <FILTERS>", filter);
     }
+    //--------------------------------------------------------------------------------
+    //endregion
+
 }
