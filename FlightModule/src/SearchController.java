@@ -101,14 +101,15 @@ public class SearchController extends DatabaseController {
     }
 
     public ArrayList<Flight> searchForAllFlightsByDepartureInterval(LocalDateTime start, LocalDateTime end) {
-        ArrayList<String> filters = new ArrayList<>();
-        filters.add("DepartureTime >= ?");
-        filters.add("DepartureTime <= ?");
+        String[] filters = {
+                "DepartureTime >= ?",
+                "DepartureTime <= ?"
+        };
         String query = getFlightQuery(filters);
 
         ArrayList<Object> params = new ArrayList<>();
-        params.add(start);
-        params.add(end);
+        params.add(convertLocalDateTimeToString(start));
+        params.add(convertLocalDateTimeToString(end));
 
         return executeQuery(query, params, flightInitializer);
     }
@@ -121,8 +122,7 @@ public class SearchController extends DatabaseController {
         if(airline.length() == 0) {
             return searchForAllFlights();
         }
-        ArrayList<String> filters = new ArrayList<>();
-        filters.add("Airline LIKE ?");
+        String[] filters = {"Airline LIKE ?"};
         String query = getFlightQuery(filters);
 
         // TODO: Filter by 'LIKE' or '='?
@@ -137,7 +137,7 @@ public class SearchController extends DatabaseController {
         return getFlightQuery(null);
     }
 
-    private String getFlightQuery(ArrayList<String> filters) {
+    private String getFlightQuery(String[] filters) {
         String query =
               "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
             + "\n	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,"
@@ -181,7 +181,7 @@ public class SearchController extends DatabaseController {
         if(filters == null) {
             return query;
         }
-        if(filters.isEmpty()) {
+        if(filters.length == 0) {
             return query;
         }
         String filter = "WHERE " + String.join(" AND ", filters);
