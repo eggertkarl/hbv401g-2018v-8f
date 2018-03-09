@@ -34,10 +34,11 @@ SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,
 		FROM (
 			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R -- alias
 			LEFT JOIN
-			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) S -- a different S...?
-			ON R.SeatRow = S.Row
-			AND R.SeatColumn = S.Column
-			AND R.AirplaneType = S.AirplaneType
+			(SELECT Row, Column, IsFirstClass, AirplaneType FROM FlightSeats) C
+			-- C is an alias for a subset of the FlightSeats table
+			ON R.SeatRow = C.Row
+			AND R.SeatColumn = C.Column
+			AND R.AirplaneType = C.AirplaneType
 		)
 	) B -- B is an alias for the table that is used to keep track of what seats have been reserved
 	ON T.FlightNumber = B.FlightNumber
