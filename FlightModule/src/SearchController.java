@@ -7,46 +7,46 @@ public class SearchController extends DatabaseController {
     //region Initializers
     //--------------------------------------------------------------------------------
     private static final Initializer<Seat> seatInitializer = (map -> {
-        int row = (int) map.get("Row");
-        String column = (String) map.get("Column");
-        boolean isAvailable = (int) map.get("IsAvailable") == 1;
-        boolean isFirstClass = (int) map.get("IsFirstClass") == 1;
+        int row = (int) map.get(SeatColumns.row);
+        String column = (String) map.get(SeatColumns.column);
+        boolean isAvailable = (int) map.get(SeatColumns.isAvailable) == 1;
+        boolean isFirstClass = (int) map.get(SeatColumns.isFirstClass) == 1;
 
         return new Seat(row, column, isAvailable, isFirstClass);
     });
 
     private static final Initializer<User> userInitializer = (map -> {
-        String name = (String) map.get("Name");
-        boolean isMinor = (int) map.get("IsMinor") == 1;
-        String passportNumber = (String) map.get("PassportNumber");
+        String name = (String) map.get(UserColumns.name);
+        boolean isMinor = (int) map.get(UserColumns.isMinor) == 1;
+        String passportNumber = (String) map.get(UserColumns.passportNumber);
 
         return new User(name, isMinor, passportNumber);
     });
 
     private static final Initializer<Flight> flightInitializer = (map -> {
-        String flightNumber = (String) map.get("FlightNumber");
-        String airline = (String) map.get("Airline");
-        String airplaneType = (String) map.get("AirplaneType");
-        int priceCoach = (int) map.get("PriceCoach");
-        int priceFirstClass = (int) map.get("PriceFirstClass");
+        String flightNumber = (String) map.get(FlightColumns.flightNumber);
+        String airline = (String) map.get(FlightColumns.airline);
+        String airplaneType = (String) map.get(FlightColumns.airplaneType);
+        int priceCoach = (int) map.get(FlightColumns.priceCoach);
+        int priceFirstClass = (int) map.get(FlightColumns.priceFirstClass);
 
-        int totalSeatsFirstClass = (int) map.get("TotalSeatsFirstClass");
-        int totalSeatsCoach = (int) map.get("TotalSeatsCoach");
-        int reservedSeatsFirstClass = (int) map.get("ReservedSeatsFirstClass");
-        int reservedSeatsCoach = (int) map.get("ReservedSeatsCoach");
+        int totalSeatsFirstClass = (int) map.get(FlightColumns.totalSeatsFirstClass);
+        int totalSeatsCoach = (int) map.get(FlightColumns.totalSeatsCoach);
+        int reservedSeatsFirstClass = (int) map.get(FlightColumns.reservedSeatsFirstClass);
+        int reservedSeatsCoach = (int) map.get(FlightColumns.reservedSeatsCoach);
 
-        String departureLocation = (String) map.get("DepartureLocation");
-        String arrivalLocation = (String) map.get("ArrivalLocation");
+        String departureLocation = (String) map.get(FlightColumns.departureLocation);
+        String arrivalLocation = (String) map.get(FlightColumns.arrivalLocation);
 
-        String arrivalTimeText = (String) map.get("ArrivalTime");
-        String departureTimeText = (String) map.get("DepartureTime");
+        String arrivalTimeText = (String) map.get(FlightColumns.arrivalTime);
+        String departureTimeText = (String) map.get(FlightColumns.departureTime);
         LocalDateTime arrivalTime = convertStringToLocalDateTime(arrivalTimeText);
         LocalDateTime departureTime = convertStringToLocalDateTime(departureTimeText);
 
 
-        boolean hasMeal = (int) map.get("HasMeal") == 1;
-        boolean hasVegeterianMeal = (int) map.get("HasVegeterianMeal") == 1;
-        boolean hasEntertainment = (int) map.get("HasEntertainment") == 1;
+        boolean hasMeal = (int) map.get(FlightColumns.hasMeal) == 1;
+        boolean hasVegeterianMeal = (int) map.get(FlightColumns.hasVegeterianMeal) == 1;
+        boolean hasEntertainment = (int) map.get(FlightColumns.hasEntertainment) == 1;
 
         return new Flight(flightNumber, airline, airplaneType, priceCoach, priceFirstClass,
                 totalSeatsFirstClass, totalSeatsCoach, reservedSeatsFirstClass, reservedSeatsCoach,
@@ -109,8 +109,8 @@ public class SearchController extends DatabaseController {
 
     public ArrayList<Flight> searchForAllFlightsByDepartureInterval(LocalDateTime start, LocalDateTime end) {
         String[] filters = {
-                "DepartureTime >= ?",
-                "DepartureTime <= ?"
+                FlightColumns.departureTime + " >= ?",
+                FlightColumns.departureTime + " <= ?"
         };
         Object[] params = {
                 convertLocalDateTimeToString(start),
@@ -126,7 +126,9 @@ public class SearchController extends DatabaseController {
         // This query example selects all names that start with A.
         // SELECT * FROM Names WHERE Name LIKE 'A%';
 
-        String[] filters = {"Airline LIKE ?"};
+        String[] filters = {
+                FlightColumns.airline + " LIKE ?"
+        };
         Object[] params = {airline + "%"};
 
         return searchForFlights(filters, params);
@@ -168,9 +170,9 @@ public class SearchController extends DatabaseController {
         String query =
               "SELECT FlightNumber, Airline, AirplaneType, DepartureLocation, ArrivalLocation,"
             + "\n	DepartureTime, ArrivalTime, PriceCoach, PriceFirstClass, HasMeal, HasVegeterianMeal,"
-            + "\n	HasEntertainment, TotalSeatsCoach, TotalSeatsFirstClass,"
-            + "\n	IFNULL(ReservedSeatsCoach, 0) ReservedSeatsCoach,"
-            + "\n	IFNULL(ReservedSeatsFirstClass, 0) ReservedSeatsFirstClass"
+            + "\n	HasEntertainment, " + FlightColumns.totalSeatsCoach + "," + FlightColumns.totalSeatsFirstClass + ","
+            + "\n	IFNULL(" + FlightColumns.reservedSeatsCoach + ", 0) " + FlightColumns.reservedSeatsCoach + ","
+            + "\n	IFNULL(" + FlightColumns.reservedSeatsFirstClass + ", 0) " + FlightColumns.reservedSeatsFirstClass
             + "\n FROM ("
             + "\n	SELECT * FROM ("
             + "\n	("
@@ -181,8 +183,8 @@ public class SearchController extends DatabaseController {
             + "\n	("
             + "\n		SELECT "
             + "\n			AirplaneType, "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS TotalSeatsCoach,  "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS TotalSeatsFirstClass "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.totalSeatsCoach + ",  "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS " + FlightColumns.totalSeatsFirstClass
             + "\n		FROM FlightSeats"
             + "\n		GROUP BY AirplaneType"
             + "\n	) S"
@@ -191,8 +193,8 @@ public class SearchController extends DatabaseController {
             + "\n	LEFT JOIN "
             + "\n	("
             + "\n		SELECT FlightNumber, DepartureTime, "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS ReservedSeatsCoach, "
-            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS ReservedSeatsFirstClass"
+            + "\n			COUNT(CASE WHEN IsFirstClass = 0 THEN 1 END) AS " + FlightColumns.reservedSeatsCoach + ", "
+            + "\n			COUNT(CASE WHEN IsFirstClass = 1 THEN 1 END) AS " + FlightColumns.reservedSeatsFirstClass
             + "\n		FROM ("
             + "\n			(SELECT FlightNumber, DepartureTime, SeatRow, SeatColumn, AirplaneType FROM Reservations) R"
             + "\n			LEFT JOIN "
@@ -217,4 +219,40 @@ public class SearchController extends DatabaseController {
     //--------------------------------------------------------------------------------
     //endregion
 
+    //region Column names
+    //--------------------------------------------------------------------------------
+    private static class FlightColumns {
+        static final String flightNumber = "FlightNumber";
+        static final String airline = "Airline";
+        static final String airplaneType = "AirplaneType";
+        static final String departureLocation = "DepartureLocation";
+        static final String arrivalLocation = "ArrivalLocation";
+        static final String departureTime = "DepartureTime";
+        static final String arrivalTime = "ArrivalTime";
+        static final String priceCoach = "PriceCoach";
+        static final String priceFirstClass = "PriceFirstClass";
+        static final String hasMeal = "HasMeal";
+        static final String hasVegeterianMeal = "HasVegeterianMeal";
+        static final String hasEntertainment = "HasEntertainment";
+
+        static final String totalSeatsFirstClass = "TotalSeatsFirstClass";
+        static final String totalSeatsCoach = "TotalSeatsCoach";
+        static final String reservedSeatsFirstClass = "ReservedSeatsFirstClass";
+        static final String reservedSeatsCoach = "ReservedSeatsCoach";
+    }
+
+    private static class SeatColumns {
+        static final String row = "Row";
+        static final String column = "Column";
+        static final String isFirstClass = "IsFirstClass";
+        static final String isAvailable = "IsAvailable";
+    }
+
+    private static class UserColumns {
+        static final String name = "Name";
+        static final String isMinor = "IsMinor";
+        static final String passportNumber = "PassportNumber";
+    }
+    //--------------------------------------------------------------------------------
+    //endregion
 }
