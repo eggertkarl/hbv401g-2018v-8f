@@ -1,63 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SearchController extends DatabaseController {
-
-
-    //region Initializers
-    //--------------------------------------------------------------------------------
-    private static final Initializer<Seat> seatInitializer = new Initializer<Seat>() {
-        @Override
-        Seat create(HashMap<String, Object> map) {
-            set(map);
-            return new Seat(
-                    getInt(SeatColumns.row),
-                    getString(SeatColumns.column),
-                    getBoolean(SeatColumns.isAvailable),
-                    getBoolean(SeatColumns.isFirstClass)
-            );
-        }
-    };
-
-    private static final Initializer<User> userInitializer = new Initializer<User>() {
-        @Override
-        User create(HashMap<String, Object> map) {
-            set(map);
-            return new User(
-                    getString(UserColumns.name),
-                    getBoolean(UserColumns.isMinor),
-                    getString(UserColumns.passportNumber));
-        }
-    };
-
-    private static final Initializer<Flight> flightInitializer = new Initializer<Flight>() {
-        @Override
-        Flight create(HashMap<String, Object> map) {
-            set(map);
-            return new Flight(
-                    getString(FlightColumns.flightNumber),
-                    getString(FlightColumns.airline),
-                    getString(FlightColumns.airplaneType),
-                    getInt(FlightColumns.priceCoach),
-                    getInt(FlightColumns.priceFirstClass),
-                    getInt(FlightColumns.totalSeatsFirstClass),
-                    getInt(FlightColumns.totalSeatsCoach),
-                    getInt(FlightColumns.reservedSeatsFirstClass),
-                    getInt(FlightColumns.reservedSeatsCoach),
-                    getString(FlightColumns.departureLocation),
-                    getString(FlightColumns.arrivalLocation),
-                    getDateTime(FlightColumns.departureTime),
-                    getDateTime(FlightColumns.arrivalTime),
-                    getDouble(FlightColumns.averageRating),
-                    getBoolean(FlightColumns.hasMeal),
-                    getBoolean(FlightColumns.hasVegeterianMeal),
-                    getBoolean(FlightColumns.hasEntertainment)
-            );
-        }
-    };
-    //--------------------------------------------------------------------------------
-    //endregion
 
 
     //region Public functions
@@ -246,41 +190,5 @@ public class SearchController extends DatabaseController {
     //--------------------------------------------------------------------------------
     //endregion
 
-    //region Column names
-    //--------------------------------------------------------------------------------
-    private static class FlightColumns {
-        static final String flightNumber = "FlightNumber";
-        static final String airline = "Airline";
-        static final String airplaneType = "AirplaneType";
-        static final String departureLocation = "DepartureLocation";
-        static final String arrivalLocation = "ArrivalLocation";
-        static final String departureTime = "DepartureTime";
-        static final String arrivalTime = "ArrivalTime";
-        static final String priceCoach = "PriceCoach";
-        static final String priceFirstClass = "PriceFirstClass";
-        static final String hasMeal = "HasMeal";
-        static final String hasVegeterianMeal = "HasVegeterianMeal";
-        static final String hasEntertainment = "HasEntertainment";
 
-        static final String totalSeatsFirstClass = "TotalSeatsFirstClass";
-        static final String totalSeatsCoach = "TotalSeatsCoach";
-        static final String reservedSeatsFirstClass = "ReservedSeatsFirstClass";
-        static final String reservedSeatsCoach = "ReservedSeatsCoach";
-        static final String averageRating = "AverageRating";
-    }
-
-    private static class SeatColumns {
-        static final String row = "Row";
-        static final String column = "Column";
-        static final String isFirstClass = "IsFirstClass";
-        static final String isAvailable = "IsAvailable";
-    }
-
-    private static class UserColumns {
-        static final String name = "Name";
-        static final String isMinor = "IsMinor";
-        static final String passportNumber = "PassportNumber";
-    }
-    //--------------------------------------------------------------------------------
-    //endregion
 }
