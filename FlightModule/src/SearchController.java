@@ -50,38 +50,19 @@ public class SearchController extends DatabaseController {
 
     //region Public Search functions
     //--------------------------------------------------------------------------------
-    public ArrayList<Flight> searchForAllFlights() {
-        return searchForFlights(null, null);
+
+    public ArrayList<Flight> searchForFlights(Filter.Flight filter) {
+        if(filter == null) {
+            String query = getFlightQuery();
+            return executeQuery(query, flightInitializer);
+        }
+
+        ArrayList<String> filters = filter.getFilters();
+        ArrayList<Object> params = filter.getParameters();
+
+        String query = getFlightQuery(filters);
+        return executeQuery(query, params, flightInitializer);
     }
-
-    public ArrayList<Flight> searchForAllFlightsByDepartureInterval(LocalDateTime start, LocalDateTime end) {
-        String[] filters = {
-                FlightColumns.departureTime + " >= ?",
-                FlightColumns.departureTime + " <= ?"
-        };
-        Object[] params = {
-                convertLocalDateTimeToString(start),
-                convertLocalDateTimeToString(end)
-        };
-
-        return searchForFlights(filters, params);
-    }
-
-
-    public ArrayList<Flight> searchForAllFlightsFilterByAirline(String airline) {
-
-        // This query example selects all names that start with A.
-        // SELECT * FROM Names WHERE Name LIKE 'A%';
-
-        String[] filters = {
-                FlightColumns.airline + " LIKE ?"
-        };
-        Object[] params = {airline + "%"};
-
-        return searchForFlights(filters, params);
-    }
-
-    // TODO: Implement more functions with filters.
 
     //--------------------------------------------------------------------------------
     //endregion

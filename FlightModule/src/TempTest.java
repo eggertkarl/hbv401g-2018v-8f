@@ -14,8 +14,12 @@ public class TempTest
     {
         SearchController sc = new SearchController();
 
-        ArrayList<Flight> flights = sc.searchForAllFlights();
-        //ArrayList<Flight> flights = sc.searchForAllFlightsFilterByAirline("Icelandair");
+        Filter.Flight filter = new Filter.Flight();
+        filter.setAirlineEqual("Icelandair");
+        filter.setDepartureLocationEqual("Keflavík");
+        filter.setPriceCoachInterval(20000, 80000);
+
+        ArrayList<Flight> flights = sc.searchForFlights(filter);
 
         System .out.println("Flights found: ");
         for(int i = 0; i < flights.size(); i++) {
@@ -24,13 +28,6 @@ public class TempTest
                     + "\tRating: " + flights.get(i).getAverageRating());
         }
 
-        /*
-        Flight flight = flights.get(0);
-        sc.fetchSeats(flight);
-        ArrayList<Seat> seats = flight.getSeats();
-        for(int i = 0; i < seats.size(); i++) {
-            System.out.println(seats.get(i).isAvailable());
-        } */
     }
 
 }
