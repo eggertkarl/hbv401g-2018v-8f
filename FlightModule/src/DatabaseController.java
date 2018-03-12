@@ -12,8 +12,6 @@ class DatabaseController extends ColumnNames{
     private static final String DEFAULT_DATABASE_URL = "jdbc:sqlite:./flights.db";
     private static final int MAX_CONNECTION_ATTEMPTS = 3;
     private static final int DELAY_BETWEEN_ATTEMPTS = 100;
-
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     //--------------------------------------------------------------------------------
     //endregion
 
@@ -112,20 +110,6 @@ class DatabaseController extends ColumnNames{
         return this.execute(query, null);
     }
 
-
-    protected static LocalDateTime convertStringToLocalDateTime(String dateText) {
-        if(dateText == null) {
-            return null;
-        }
-        return LocalDateTime.parse(dateText, dateFormatter);
-    }
-
-    protected static String convertLocalDateTimeToString(LocalDateTime date) {
-        if(date == null) {
-            return null;
-        }
-        return date.format(dateFormatter);
-    }
     //--------------------------------------------------------------------------------
     //endregion
 

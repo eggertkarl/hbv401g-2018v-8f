@@ -3,7 +3,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 abstract class Initializer<T>{
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private HashMap<String, Object> map = null;
 
@@ -52,7 +51,7 @@ abstract class Initializer<T>{
             return null;
         }
         String text = (String) value;
-        return LocalDateTime.parse(text, dateFormatter);
+        return Utilities.convertStringToLocalDateTime(text);
     }
 }
 

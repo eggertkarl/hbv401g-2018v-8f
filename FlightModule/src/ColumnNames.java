@@ -1,5 +1,5 @@
 
-public class ColumnNames {
+class ColumnNames {
 
     protected static class FlightColumns {
         static final String flightNumber = "FlightNumber";

@@ -9,7 +9,7 @@ public class SearchController extends DatabaseController {
     public boolean fetchSeats(Flight flight) {
         String flightNumber = flight.getFlightNumber();
         LocalDateTime departureTime = flight.getDepartureTime();
-        String departureTimeText = convertLocalDateTimeToString(departureTime);
+        String departureTimeText = Utilities.convertLocalDateTimeToString(departureTime);
         String airplaneType = flight.getAirplaneType();
 
         String query =
@@ -57,8 +57,9 @@ public class SearchController extends DatabaseController {
             return executeQuery(query, flightInitializer);
         }
 
-        ArrayList<String> filters = filter.getFilters();
-        ArrayList<Object> params = filter.getParameters();
+        Utilities.Tuple<ArrayList<String>, ArrayList<Object>> filtersAndParameters = filter.getFiltersAndParameters();
+        ArrayList<String> filters = filtersAndParameters.valueLower;
+        ArrayList<Object> params = filtersAndParameters.valueUpper;
 
         String query = getFlightQuery(filters);
         return executeQuery(query, params, flightInitializer);
