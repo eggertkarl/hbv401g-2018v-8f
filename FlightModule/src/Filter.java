@@ -6,9 +6,7 @@ public class Filter extends ColumnNames{
 
     private HashMap<String, Utilities.Tuple> map = null;
 
-
-
-    protected Filter() {
+    private Filter() {
         map = new HashMap<>();
     }
 
@@ -26,15 +24,15 @@ public class Filter extends ColumnNames{
         }
     }
 
-    protected void setEqual(String key, Object value) {
+    protected void setEqualTo(String key, Object value) {
         set(key, value, value);
     }
 
-    protected void setLowerThanOrEqual(String key, Object value) {
+    protected void setLowerThanOrEqualTo(String key, Object value) {
         set(key, null, value);
     }
 
-    protected void setGreaterThanOrEqual(String key, Object value) {
+    protected void setGreaterThanOrEqualTo(String key, Object value) {
         set(key, value, null);
     }
 
@@ -53,26 +51,22 @@ public class Filter extends ColumnNames{
 
         ArrayList<String> keys = new ArrayList<>(this.map.keySet());
 
-        for(int i = 0; i < keys.size(); i++) {
-            String key = keys.get(i);
+        for (String key : keys) {
             Utilities.Tuple tmp = this.map.get(key);
-            if(tmp != null) {
+            if (tmp != null) {
                 Object lower = tmp.valueLower;
                 Object upper = tmp.valueUpper;
                 // We know at least one of them is not null.
-                if(lower == null) {
+                if (lower == null) {
                     filters.add(key + " <= ?");
                     parameters.add(upper);
-                }
-                else if(upper == null) {
+                } else if (upper == null) {
                     filters.add(key + " >= ?");
                     parameters.add(lower);
-                }
-                else if(lower == upper){
+                } else if (lower == upper) {
                     filters.add(key + " = ?");
                     parameters.add(lower);
-                }
-                else {
+                } else {
                     // Interval case
                     filters.add(key + " <= ?");
                     parameters.add(upper);
@@ -94,50 +88,50 @@ public class Filter extends ColumnNames{
 
         //region Set functions
         //--------------------------------------------------------------------------------
-        public void setFlightNumberEqual(String flightNumber) {
-            setEqual(FlightColumns.flightNumber, flightNumber);
+        public void setFlightNumberEqualTo(String flightNumber) {
+            setEqualTo(FlightColumns.flightNumber, flightNumber);
         }
 
-        public void setAirlineEqual(String airline) {
-            setEqual(FlightColumns.airline, airline);
+        public void setAirlineEqualTo(String airline) {
+            setEqualTo(FlightColumns.airline, airline);
         }
 
-        public void setAirplaneTypeEqual(String airplaneType) {
-            setEqual(FlightColumns.airplaneType, airplaneType);
+        public void setAirplaneTypeEqualTo(String airplaneType) {
+            setEqualTo(FlightColumns.airplaneType, airplaneType);
         }
 
-        public void setDepartureLocationEqual(String departureLocation) {
-            setEqual(FlightColumns.departureLocation, departureLocation);
+        public void setDepartureLocationEqualTo(String departureLocation) {
+            setEqualTo(FlightColumns.departureLocation, departureLocation);
         }
 
-        public void setArrivalLocationEqual(String arrivalLocation) {
-            setEqual(FlightColumns.arrivalLocation, arrivalLocation);
+        public void setArrivalLocationEqualTo(String arrivalLocation) {
+            setEqualTo(FlightColumns.arrivalLocation, arrivalLocation);
         }
 
-        public void setHasMeal(Boolean hasMeal) {
-            setEqual(FlightColumns.hasMeal, hasMeal);
+        public void setHasMealEqualTo(Boolean hasMeal) {
+            setEqualTo(FlightColumns.hasMeal, hasMeal);
         }
 
-        public void setHasVegeterianMeal(Boolean hasVegeterianMeal) {
-            setEqual(FlightColumns.hasVegeterianMeal, hasVegeterianMeal);
+        public void setHasVegeterianMealEqualTo(Boolean hasVegeterianMeal) {
+            setEqualTo(FlightColumns.hasVegeterianMeal, hasVegeterianMeal);
         }
 
-        public void setHasEntertainment(Boolean hasEntertainment) {
-            setEqual(FlightColumns.hasEntertainment, hasEntertainment);
+        public void setHasEntertainmentEqualTo(Boolean hasEntertainment) {
+            setEqualTo(FlightColumns.hasEntertainment, hasEntertainment);
         }
 
 
         // Departure time functions:
-        public void setDepartureTimeEqual(LocalDateTime departureTime) {
-            setEqual(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        public void setDepartureTimeEqualTo(LocalDateTime departureTime) {
+            setEqualTo(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
         }
 
-        public void setDepartureTimeLowerThanOrEqual(LocalDateTime departureTime) {
-            setLowerThanOrEqual(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        public void setDepartureTimeLowerThanOrEqualTo(LocalDateTime departureTime) {
+            setLowerThanOrEqualTo(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
         }
 
-        public void setDepartureTimeGreaterThanOrEqual(LocalDateTime departureTime) {
-            setGreaterThanOrEqual(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        public void setDepartureTimeGreaterThanOrEqualTo(LocalDateTime departureTime) {
+            setGreaterThanOrEqualTo(FlightColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
         }
 
         public void setDepartureTimeInterval(LocalDateTime departureTimeLower, LocalDateTime departureTimeUpper) {
@@ -157,16 +151,16 @@ public class Filter extends ColumnNames{
 
 
         // Arrival time functions:
-        public void setArrivalTimeEqual(LocalDateTime arrivalTime) {
-            setEqual(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
+        public void setArrivalTimeEqualTo(LocalDateTime arrivalTime) {
+            setEqualTo(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
         }
 
-        public void setArrivalTimeLowerThanOrEqual(LocalDateTime arrivalTime) {
-            setLowerThanOrEqual(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
+        public void setArrivalTimeLowerThanOrEqualTo(LocalDateTime arrivalTime) {
+            setLowerThanOrEqualTo(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
         }
 
-        public void setArrivalTimeGreaterThanOrEqual(LocalDateTime arrivalTime) {
-            setGreaterThanOrEqual(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
+        public void setArrivalTimeGreaterThanOrEqualTo(LocalDateTime arrivalTime) {
+            setGreaterThanOrEqualTo(FlightColumns.arrivalTime, Utilities.convertLocalDateTimeToString(arrivalTime));
         }
 
         public void setArrivalTimeInterval(LocalDateTime arrivalTimeLower, LocalDateTime arrivalTimeUpper) {
@@ -186,16 +180,16 @@ public class Filter extends ColumnNames{
 
 
         // Price coach functions:
-        public void setPriceCoachEqual(Integer priceCoach) {
-            setEqual(FlightColumns.priceCoach, priceCoach);
+        public void setPriceCoachEqualTo(Integer priceCoach) {
+            setEqualTo(FlightColumns.priceCoach, priceCoach);
         }
 
-        public void setPriceCoachLowerThanOrEqual(Integer priceCoach) {
-            setLowerThanOrEqual(FlightColumns.priceCoach, priceCoach);
+        public void setPriceCoachLowerThanOrEqualTo(Integer priceCoach) {
+            setLowerThanOrEqualTo(FlightColumns.priceCoach, priceCoach);
         }
 
-        public void setPriceCoachGreaterThanOrEqual(Integer priceCoach) {
-            setGreaterThanOrEqual(FlightColumns.priceCoach, priceCoach);
+        public void setPriceCoachGreaterThanOrEqualTo(Integer priceCoach) {
+            setGreaterThanOrEqualTo(FlightColumns.priceCoach, priceCoach);
         }
 
         public void setPriceCoachInterval(Integer priceCoachLower, Integer priceCoachUpper) {
@@ -211,16 +205,16 @@ public class Filter extends ColumnNames{
 
 
         // Price first class functions:
-        public void setPriceFirstClassEqual(Integer priceFirstClass) {
-            setEqual(FlightColumns.priceFirstClass, priceFirstClass);
+        public void setPriceFirstClassEqualTo(Integer priceFirstClass) {
+            setEqualTo(FlightColumns.priceFirstClass, priceFirstClass);
         }
 
-        public void setPriceFirstClassLowerThanOrEqual(Integer priceFirstClass) {
-            setLowerThanOrEqual(FlightColumns.priceFirstClass, priceFirstClass);
+        public void setPriceFirstClassLowerThanOrEqualTo(Integer priceFirstClass) {
+            setLowerThanOrEqualTo(FlightColumns.priceFirstClass, priceFirstClass);
         }
 
-        public void setPriceFirstClassGreaterThanOrEqual(Integer priceFirstClass) {
-            setGreaterThanOrEqual(FlightColumns.priceFirstClass, priceFirstClass);
+        public void setPriceFirstClassGreaterThanOrEqualTo(Integer priceFirstClass) {
+            setGreaterThanOrEqualTo(FlightColumns.priceFirstClass, priceFirstClass);
         }
 
         public void setPriceFirstClassInterval(Integer priceFirstClassLower, Integer priceFirstClassUpper) {
@@ -285,6 +279,95 @@ public class Filter extends ColumnNames{
 
         public void removePriceFirstClass() {
             remove(FlightColumns.priceFirstClass);
+        }
+        //--------------------------------------------------------------------------------
+        //endregion
+    }
+
+    public static class Reservation extends Filter {
+
+        //region Set functions
+        //--------------------------------------------------------------------------------
+        public void setFlightNumberEqualTo(String flightNumber) {
+            setEqualTo(ReservationColumns.flightNumber, flightNumber);
+        }
+
+        // Departure time functions:
+        public void setDepartureTimeEqualTo(LocalDateTime departureTime) {
+            setEqualTo(ReservationColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        }
+
+        public void setDepartureTimeLowerThanOrEqualTo(LocalDateTime departureTime) {
+            setLowerThanOrEqualTo(ReservationColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        }
+
+        public void setDepartureTimeGreaterThanOrEqualTo(LocalDateTime departureTime) {
+            setGreaterThanOrEqualTo(ReservationColumns.departureTime, Utilities.convertLocalDateTimeToString(departureTime));
+        }
+
+        public void setDepartureTimeInterval(LocalDateTime departureTimeLower, LocalDateTime departureTimeUpper) {
+            if(departureTimeLower != null && departureTimeUpper != null) {
+                // If both have set times, we want to check if the user swapped the upper/lower bounds.
+                if(departureTimeUpper.isBefore(departureTimeLower)) {
+                    setInterval(ReservationColumns.departureTime,
+                            Utilities.convertLocalDateTimeToString(departureTimeUpper),
+                            Utilities.convertLocalDateTimeToString(departureTimeLower));
+                    return;
+                }
+            }
+            setInterval(FlightColumns.departureTime,
+                    Utilities.convertLocalDateTimeToString(departureTimeLower),
+                    Utilities.convertLocalDateTimeToString(departureTimeUpper));
+        }
+
+
+        public void setNameEqualTo(String name) {
+            setEqualTo(ReservationColumns.name, name);
+        }
+
+        public void setPassportNumberEqualTo(String passportNumber) {
+            setEqualTo(ReservationColumns.passportNumber, passportNumber);
+        }
+
+        public void setSeatRowEqualTo(Integer row) {
+            setEqualTo(ReservationColumns.row, row);
+        }
+
+        public void setSeatColumnEqualTo(String column) {
+            setEqualTo(ReservationColumns.column, column);
+        }
+
+        public void setHasVegeterianMealEqualTo(Boolean hasVegeterianMeal) {
+            setEqualTo(ReservationColumns.hasVegeterianMeal, hasVegeterianMeal);
+        }
+        //--------------------------------------------------------------------------------
+        //endregion
+
+
+        //region Remove functions
+        //--------------------------------------------------------------------------------
+        public void removeDepartureTime() {
+            remove(ReservationColumns.departureTime);
+        }
+
+        public void removeName() {
+            remove(ReservationColumns.name);
+        }
+
+        public void removePassportNumber() {
+            remove(ReservationColumns.passportNumber);
+        }
+
+        public void removeSeatRow() {
+            remove(ReservationColumns.row);
+        }
+
+        public void removeSeatColumn() {
+            remove(ReservationColumns.column);
+        }
+
+        public void removeHasVegeterianMeal() {
+            remove(ReservationColumns.hasVegeterianMeal);
         }
         //--------------------------------------------------------------------------------
         //endregion

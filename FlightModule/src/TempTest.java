@@ -1,8 +1,4 @@
-import com.sun.corba.se.impl.orb.DataCollectorBase;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class should only be used to test before the interface has
@@ -15,8 +11,8 @@ public class TempTest
         SearchController sc = new SearchController();
 
         Filter.Flight filter = new Filter.Flight();
-        filter.setAirlineEqual("Icelandair");
-        filter.setDepartureLocationEqual("Keflavík");
+        filter.setAirlineEqualTo("Icelandair");
+        filter.setDepartureLocationEqualTo("Keflavík");
         filter.setPriceCoachInterval(20000, 80000);
 
         ArrayList<Flight> flights = sc.searchForFlights(filter);
