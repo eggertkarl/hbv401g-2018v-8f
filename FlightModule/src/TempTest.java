@@ -10,12 +10,11 @@ public class TempTest
     {
         SearchController sc = new SearchController();
 
-        Filter.Flight filter = new Filter.Flight();
-        filter.setAirlineEqualTo("Icelandair");
-        filter.setDepartureLocationEqualTo("Keflavík");
-        filter.setPriceCoachInterval(20000, 80000);
+        sc.filterSetAirlineEqualTo("Icelandair");
+        sc.filterSetDepartureLocationEqualTo("Keflavík");
+        sc.filterSetPriceCoachInterval(20000, 80000);
 
-        ArrayList<Flight> flights = sc.searchForFlights(filter);
+        ArrayList<Flight> flights = sc.searchForFlights();
 
         System .out.println("Flights found: ");
         for(int i = 0; i < flights.size(); i++) {
