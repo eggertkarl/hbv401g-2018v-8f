@@ -14,7 +14,7 @@ public class User {
         ...
     } */
 
-    public User(String name, Boolean isMinor, String passportNumber) {
+    public User(String name, String passportNumber, Boolean isMinor) {
         this.name = name;
         this.isMinor = isMinor;
         this.passportNumber = passportNumber;
