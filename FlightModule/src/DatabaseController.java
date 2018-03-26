@@ -241,8 +241,9 @@ class DatabaseController extends ColumnNames{
             set(map);
             return new User(
                     getString(UserColumns.name),
-                    getBoolean(UserColumns.isMinor),
-                    getString(UserColumns.passportNumber));
+                    getString(UserColumns.passportNumber),
+                    getBoolean(UserColumns.isMinor)
+            );
         }
     };
 
