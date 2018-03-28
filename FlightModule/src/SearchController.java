@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SearchController extends ColumnNames {
 
@@ -28,6 +29,61 @@ public class SearchController extends ColumnNames {
     //--------------------------------------------------------------------------------
     //endregion
 
+    //region sort functions
+    //--------------------------------------------------------------------------------
+    public void orderByPriceCoach(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getPriceCoach().compareTo(f2.getPriceCoach()));
+    }
+    public void orderByPriceFirstClass(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getPriceFirstClass().compareTo(f2.getPriceFirstClass()));
+    }
+    public void orderByFlightNumber(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getFlightNumber().compareTo(f2.getFlightNumber()));
+    }
+    public void orderByAirline(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getAirline().compareTo(f2.getAirline()));
+    }
+    public void orderByAirplaneType(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getAirplaneType().compareTo(f2.getAirplaneType()));
+    }
+    public void orderByTotalSeatsFirstClass(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getTotalSeatsFirstClass().compareTo(f2.getTotalSeatsFirstClass()));
+    }
+    public void orderByTotalSeatsCoach(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getTotalSeatsCoach().compareTo(f2.getTotalSeatsCoach()));
+    }
+    public void orderByReservedSeatsCoach(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getReservedSeatsCoach().compareTo(f2.getReservedSeatsCoach()));
+    }
+    public void orderByReservedSeatsFirstClass(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getReservedSeatsFirstClass().compareTo(f2.getReservedSeatsFirstClass()));
+    }
+    public void orderByDepartureLocation(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getDepartureLocation().compareTo(f2.getDepartureLocation()));
+    }
+    public void orderByArrivalLocation(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getArrivalLocation().compareTo(f2.getArrivalLocation()));
+    }
+    public void orderByDepartureTime(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getDepartureTime().compareTo(f2.getDepartureTime()));
+    }
+    public void orderByArrivalTime(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getArrivalTime().compareTo(f2.getArrivalTime()));
+    }
+    public void orderByAverageRating(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getAverageRating().compareTo(f2.getAverageRating()));
+    }
+    public void orderByHasMeal(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasMeal().compareTo(f2.hasMeal()));
+    }
+    public void orderByHasVegeterianMeal(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasEntertainment().compareTo(f2.hasEntertainment()));
+    }
+    public void orderByHasEntertainment(ArrayList<Flight> flightList) {
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getArrivalLocation().compareTo(f2.getArrivalLocation()));
+    }
+    //--------------------------------------------------------------------------------
+    //endregion
 
 
     //region Filter functions
