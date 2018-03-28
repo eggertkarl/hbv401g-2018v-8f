@@ -20,6 +20,11 @@ public class SearchController extends ColumnNames {
     public ArrayList<Flight> searchForFlights() {
         return databaseController.searchForFlights(flightFilter);
     }
+
+
+    // TODO: List of airlines?
+
+    // TODO: List of airplane types
     //--------------------------------------------------------------------------------
     //endregion
 
