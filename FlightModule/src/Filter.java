@@ -11,6 +11,12 @@ class Filter extends ColumnNames{
     }
 
     private void set(String key, Object valueLower, Object valueUpper) {
+        if (key == null) {
+            return;
+        }
+        else if (key.isEmpty()) {
+            return;
+        }
         Utilities.Tuple tmp = map.get(key);
         if(tmp == null) {
             tmp = new Utilities.Tuple();
@@ -81,5 +87,9 @@ class Filter extends ColumnNames{
         obj.valueLower = filters;
         obj.valueUpper = parameters;
         return obj;
+    }
+
+    public void clearAll() {
+        this.map.clear();
     }
 }
