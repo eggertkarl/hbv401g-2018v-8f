@@ -18,9 +18,9 @@ public class TestFilter {
 
     // Næstu (nokkuð mörg) test erum við í raun að tjekka hvort
     // getFiltersAndParameters virki rétt, ekki setEqualTo o.s.f. því það eru bara
-    // mjööög einfaldir setters (og því leyfum við þeim að vera með), en
+    // meira eða minna einfaldir setters (og því leyfum við þeim að vera með), en
     // við viljum athuga hvaða samblanda af key/value er bætt við filter objectinu
-    // með samspili getFiltersAndParameters og set-föllin úr klasanum Filter
+    // og lestur svo úr honum gegnum samspil getFiltersAndParameters og set-föllin úr klasanum Filter
 
     @Test
     public void testFilterEqualsToAddKey() {
@@ -183,7 +183,26 @@ public class TestFilter {
         assert(params.size() == 2 & params.contains(valueLower) & params.contains(valueUpper));
     }
 
+    // Testing adding multiple pairs to the hashmap.
+    // Note that testing whether the pairs are still coupled correctly is indirectly done by removing
+    // a single (key,value) pair, and checking the results, in a later test.
+    @Test
+    public void testFilterAddTwoPairs() {
+        String keyName1 = "A";
+        Object value1 = 345;
+        filter.setEqualTo(keyName1, value1);
+        String keyName2 = "B";
+        Object value2 = 666;
+        filter.setEqualTo(keyName2, value2);
 
+        Utilities.Tuple<ArrayList<String>, ArrayList<Object>> filtersAndParams = filter.getFiltersAndParameters();
+        ArrayList<String> filters = filtersAndParams.valueLower;
+        ArrayList<Object> params = filtersAndParams.valueUpper;
+
+        assert (filters.size() == 2 & filters.contains(keyName1 + " = ?") & filters.contains(keyName2 + " = ?"));
+        assert (params.size() == 2 & params.contains(value1) & params.contains(value2));
+    }
+    
     // Testing overwriting the value if a duplicate key is added.
     // We already tested all of the set functionality above, so we only do this one case.
     @Test
@@ -246,7 +265,7 @@ public class TestFilter {
         assert(params.isEmpty());
     }
 
-    // Null tjekk fyrir rest!
+    // Tjekk fyrir ýmis null tillfelli út restin af skjalinu
     // Null gildis tjekk fyrir key, á að skila tóma lista
     @Test
     public void testFilterEqualsAddKeyNull() {
@@ -382,7 +401,6 @@ public class TestFilter {
         Object valueUpper = null;
         filter.setInterval(keyName, valueLower, valueUpper);
         Utilities.Tuple<ArrayList<String>, ArrayList<Object>> filtersAndParams = filter.getFiltersAndParameters();
-        ArrayList<String> filters = filtersAndParams.valueLower;
         ArrayList<Object> params = filtersAndParams.valueUpper;
 
         assert(params.isEmpty());
