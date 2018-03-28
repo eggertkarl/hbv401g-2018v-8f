@@ -90,7 +90,7 @@ public class SearchController extends ColumnNames {
     //--------------------------------------------------------------------------------
 
     public void filterReset() {
-        flightFilter = new Filter();
+        flightFilter.clearAll();
     }
 
     //region Set functions
