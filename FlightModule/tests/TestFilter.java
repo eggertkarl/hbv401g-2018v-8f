@@ -222,7 +222,7 @@ public class TestFilter {
     
     // Testing overwriting the value if a duplicate key is added, but with a different set function.
     @Test
-    public void testFilterOverwriteWithInterval()() {
+    public void testFilterOverwriteWithInterval() {
         String keyName = "A";
         Object value1 = 345;
         filter.setEqualTo(keyName, value1);
