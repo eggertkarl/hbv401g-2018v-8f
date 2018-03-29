@@ -8,10 +8,20 @@ CREATE TABLE AirplaneTypes(
 CREATE TABLE FlightSeats(
   AirplaneType VARCHAR,
   Row INT,
-  Column VARCHAR(1), -- INT?
+  Column VARCHAR(1),
   IsFirstClass BIT,
   PRIMARY KEY (AirplaneType, Row, Column)
   FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
+);
+
+CREATE TABLE Locations(
+  City VARCHAR,
+  PRIMARY KEY (City)
+);
+
+CREATE TABLE Airlines(
+  Airline VARCHAR,
+  PRIMARY KEY (Airline)
 );
 
 CREATE TABLE Flights(
@@ -28,6 +38,9 @@ CREATE TABLE Flights(
   HasVegeterianMeal BIT,
   HasEntertainment BIT,
   PRIMARY KEY (FlightNumber, DepartureTime),
+  FOREIGN KEY (Airline) REFERENCES Airlines(Airline)
+  FOREIGN KEY (DepartureLocation) REFERENCES  Locations(City),
+  FOREIGN KEY (ArrivalLocation) REFERENCES  Locations(City),
   FOREIGN KEY (AirplaneType) REFERENCES AirplaneTypes(AirplaneType)
 );
 
