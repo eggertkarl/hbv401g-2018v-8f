@@ -204,7 +204,6 @@ public class TestFilter {
     }
     
     // Testing overwriting the value if a duplicate key is added.
-    // We already tested all of the set functionality above, so we only do this one case.
     @Test
     public void testFilterOverwriteValue() {
         String keyName = "A";
@@ -220,7 +219,43 @@ public class TestFilter {
         assert(filters.size() == 1 & filters.contains(keyName + " = ?"));
         assert(params.size() == 1 & params.contains(value2));
     }
+    
+    // Testing overwriting the value if a duplicate key is added, but with a different set function.
+    @Test
+    public void testFilterOverwriteWithInterval()() {
+        String keyName = "A";
+        Object value1 = 345;
+        filter.setEqualTo(keyName, value1);
+        Object value2 = 666;
+        Object value3 = 999;
+        filter.setInterval(keyName, value2, value3);
 
+        Utilities.Tuple<ArrayList<String>, ArrayList<Object>> filtersAndParams = filter.getFiltersAndParameters();
+        ArrayList<String> filters = filtersAndParams.valueLower;
+        ArrayList<Object> params = filtersAndParams.valueUpper;
+
+        assert(filters.size() == 2 & filters.contains(keyName + " <= ?") & filters.contains(keyName + " >= ?"));
+        assert(params.size() == 2 & params.contains(value2) & params.contains(value3));
+    }
+    
+    // A somewhat compound test of a similar cases to the two tests above.
+    // Could easily be split into two, but we want to test here if the full overwrite is succesful.
+    @Test
+    public void testFilterOverwriteValuePlusLowerThanWithGreaterThan() {
+        String keyName = "A";
+        Object value1 = 345;
+        filter.setLowerThanOrEqualTo(keyName, value1);
+        Object value2 = 666;
+        filter.setGreaterThanOrEqualTo(keyName, value2);
+
+        Utilities.Tuple<ArrayList<String>, ArrayList<Object>> filtersAndParams = filter.getFiltersAndParameters();
+        ArrayList<String> filters = filtersAndParams.valueLower;
+        ArrayList<Object> params = filtersAndParams.valueUpper;
+
+        assert(filters.size() == 1 & filters.contains(keyName + " >= ?"));
+        assert(params.size() == 1 & params.contains(value2));
+    }
+    
     // Testing removing a (key, value)-tuple.
     // We already tested all of the set functionality above, so we only do this one case.
     @Test
