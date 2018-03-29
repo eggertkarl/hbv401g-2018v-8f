@@ -23,6 +23,13 @@ public class TempTest
                     + "\tRating: " + flights.get(i).getAverageRating());
         }
 
+
+        ArrayList<String> locations = sc.getListOfLocations();
+        ArrayList<String> airplaneTypes = sc.getListOfAirplaneTypes();
+        ArrayList<String> airlines = sc.getListOfAirlines();
+        ArrayList<Integer> priceCoach = sc.getMinMaxPriceCoach();
+        ArrayList<Integer> priceFirstClass = sc.getMinMaxPriceFirstClass();
+        System.out.println("Done");
     }
 
 }

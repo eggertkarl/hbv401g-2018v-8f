@@ -110,6 +110,36 @@ class DatabaseController extends ColumnNames{
         return this.execute(query, null);
     }
 
+
+    protected ArrayList<String> getStringsFromTable(String tableName, String columnName) {
+        Initializer<String> initializer = new Initializer<String>() {
+            @Override
+            String create(HashMap<String, Object> map) {
+                set(map);
+                return getString(columnName);
+            }
+        };
+        String query = "SELECT " + columnName + " FROM " + tableName + " ORDER BY " + columnName + ";";
+        return executeQuery(query, initializer);
+    }
+
+    protected ArrayList<Integer> getMinMaxFromTable(String tableName, String columnName) {
+        String query = "SELECT MIN(" + columnName + ") AS MinPrice, MAX("
+                + columnName + ") AS MaxPrice FROM " + tableName + ";";
+        Initializer<Integer[]> initializer = new Initializer<Integer[]>() {
+            @Override
+            Integer[] create(HashMap<String, Object> map) {
+                set(map);
+                return new Integer[]{getInt("MinPrice"), getInt("MaxPrice")};
+            }
+        };
+        ArrayList<Integer[]> result = executeQuery(query, initializer);
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(result.get(0)[0]);
+        list.add(result.get(0)[1]);
+        return list;
+    }
+
     //--------------------------------------------------------------------------------
     //endregion
 

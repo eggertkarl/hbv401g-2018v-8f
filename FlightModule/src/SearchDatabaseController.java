@@ -57,6 +57,27 @@ class SearchDatabaseController extends DatabaseController{
         return executeQuery(query, params, flightInitializer);
     }
 
+    ArrayList<String> getListOfAirlines() {
+        return getStringsFromTable("Airlines", "Airline");
+    }
+
+    ArrayList<String> getListOfLocations() {
+        return getStringsFromTable("Locations", "City");
+    }
+
+    ArrayList<String> getListOfAirplaneTypes() {
+        return getStringsFromTable("AirplaneTypes", "AirplaneType");
+    }
+
+    ArrayList<Integer> getMinMaxPriceCoach() {
+        return getMinMaxFromTable("Flights", "PriceCoach");
+    }
+
+    ArrayList<Integer> getMinMaxPriceFirstClass() {
+        return getMinMaxFromTable("Flights", "PriceFirstClass");
+    }
+
+
 
     private String getFlightQuery() {
         return getFlightQuery(null);

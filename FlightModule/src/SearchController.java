@@ -23,9 +23,26 @@ public class SearchController extends ColumnNames {
     }
 
 
-    // TODO: List of airlines?
+    public ArrayList<String> getListOfLocations() {
+        return databaseController.getListOfLocations();
+    }
 
-    // TODO: List of airplane types
+    public ArrayList<String> getListOfAirlines() {
+        return databaseController.getListOfAirlines();
+    }
+
+    public ArrayList<String> getListOfAirplaneTypes() {
+        return databaseController.getListOfAirplaneTypes();
+    }
+
+    public ArrayList<Integer> getMinMaxPriceCoach() {
+        return databaseController.getMinMaxPriceCoach();
+    }
+
+    public ArrayList<Integer> getMinMaxPriceFirstClass() {
+        return databaseController.getMinMaxPriceFirstClass();
+    }
+
     //--------------------------------------------------------------------------------
     //endregion
 
