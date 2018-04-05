@@ -94,10 +94,10 @@ public class SearchController extends ColumnNames {
         Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasMeal().compareTo(f2.hasMeal()));
     }
     public void orderByHasVegeterianMeal(ArrayList<Flight> flightList) {
-        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasEntertainment().compareTo(f2.hasEntertainment()));
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasVegeterianMeal().compareTo(f2.hasVegeterianMeal()));
     }
     public void orderByHasEntertainment(ArrayList<Flight> flightList) {
-        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.getArrivalLocation().compareTo(f2.getArrivalLocation()));
+        Collections.sort(flightList, (Flight f1, Flight f2) -> f1.hasEntertainment().compareTo(f2.hasEntertainment()));
     }
     //--------------------------------------------------------------------------------
     //endregion
