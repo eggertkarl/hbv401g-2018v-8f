@@ -2,13 +2,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class BookingController extends DatabaseController{
+public class BookingController extends ColumnNames{
 
+    private BookingDatabaseController databaseController = null;
     private HashMap<String, Reservation> reservations = null;
     private Flight flight = null;
 
 
     public BookingController() {
+        databaseController = new BookingDatabaseController();
         reservations = new HashMap<>();
     }
 
@@ -27,6 +29,13 @@ public class BookingController extends DatabaseController{
         }
 
         if(flight == null) {
+            return false;
+        }
+
+        if(databaseController.isSeatReserved()) { // TODO: Parameters missing
+            return false;
+        }
+        if(databaseController.doesUserAlreadyHaveReservation()) { // TODO: Parameters missing
             return false;
         }
 
@@ -73,21 +82,14 @@ public class BookingController extends DatabaseController{
             return false;
         }
 
-        // TODO: Check if any of the users already have a reserved seat in this flight.
-        // TODO: Check if any of the seats are already reserved.
-
-        // TODO: Add all the reservations to the database (in a single insert sql statement).
-
-        String query = "'No one drove in New York. There was too much traffic.' - Philip J. Fry";
-        // ArrayList<Object> params = new ArrayList<>();  Setja alla parametra í réttri röð
-        boolean success = false;
-        // success = execute(query, usedParams); // Skilar true/false eftir success.
-
-        // Temporary:
-        if(success) {
-            clearReservation();
+        if(databaseController.isSeatReserved()) { // TODO: Parameters missing
+            return false;
         }
-        return success;
+        if(databaseController.doesUserAlreadyHaveReservation()) { // TODO: Parameters missing
+            return false;
+        }
+
+        return databaseController.reserveSeats(); // TODO: Parameters missing
     }
 
     public ArrayList<Reservation> searchForReservations(String name, String passportNumber) {
@@ -99,34 +101,15 @@ public class BookingController extends DatabaseController{
             return null;
         }
 
-        // TODO: Set query and params. Should select all reservations matching the name and passportNumber.
-        String query = "'Comedy's a dead art form. Now tragedy, that's funny.' - Bender Bending Rodríguez";
-        ArrayList<Object> params = new ArrayList<>();
-
-        ArrayList<Reservation> reservations = executeQuery(query, params, reservationInitializer);
-
-
-        return null;
+        return databaseController.searchForReservations(name, passportNumber);
     }
 
 
     public boolean cancelReservation(Reservation reservation) {
-        // TODO: Query should delete the reservation. Include all keys in the sql statement.
-        // (Keys can be seen in the Documents/DatabaseSchema.sql)
-        String query = "'I’m so embarrassed. I wish everybody else was dead.' - Bender Bending Rodríguez";
-        ArrayList<Object> params = new ArrayList<>();
-
-        return execute(query, params);
+        return databaseController.cancelReservation(reservation);
     }
 
     public boolean addReview(Reservation reservation, int score, String comment) {
-        // TODO: Check if review for the flight by the same user already exists.
-
-        // TODO: The query should add the review to the correct table.
-        // (Keys can be seen in the Documents/DatabaseSchema.sql)
-        String query = "'There’s so many killbots behind us, I can’t count them all. Three, I think.' - Philip J. Fry";
-        ArrayList<Object> params = new ArrayList<>();
-
-        return execute(query, params);
+        return databaseController.addReview(reservation, score, comment);
     }
 }
