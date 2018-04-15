@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 import java.time.LocalDateTime;
 
 public class Reservation {
