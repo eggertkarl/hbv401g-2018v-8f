@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="561.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FlightModule.vidmot.BookingInterfaceController">
+   <children>
+      <TableView fx:id="jTableView1" focusTraversable="false" layoutX="536.0" layoutY="14.0" minHeight="60.0" minWidth="710.0" prefHeight="62.0" prefWidth="750.0">
+         <columns>
+            <TableColumn fx:id="jDepartureLocation" prefWidth="108.0" text="Departure" />
+            <TableColumn fx:id="jArrivalLocation" prefWidth="82.0" text="Arrival" />
+            <TableColumn fx:id="jDepartureTime" prefWidth="135.0" text="Departure time" />
+            <TableColumn fx:id="jArrivalTime" prefWidth="127.0" text="Arrival time" />
+            <TableColumn fx:id="jFlightNumber" minWidth="0.0" prefWidth="126.0" text="Flight number" />
+            <TableColumn fx:id="jAirline" minWidth="0.0" prefWidth="0.0" text="Airline" />
+            <TableColumn fx:id="jAirplaneType" prefWidth="131.0" text="Airplane type" />
+         </columns>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TableView>
+      <TableView fx:id="jTableView2" focusTraversable="false" layoutX="536.0" layoutY="74.0" prefHeight="62.0" prefWidth="750.0">
+        <columns>
+            <TableColumn fx:id="jFirstClassPrice" prefWidth="128.0" text="priceFirstClass" />
+            <TableColumn fx:id="jCoachPrice" prefWidth="102.0" text="priceCoach" />
+            <TableColumn fx:id="jTotalSeatsFirstClass" prefWidth="164.0" text="totalSeatsFirstClass" />
+            <TableColumn fx:id="jTotalSeatsCoach" prefWidth="144.0" text="totalSeatsCoach" />
+            <TableColumn fx:id="jReservedSeatsFirstClass" prefWidth="171.0" text="reservedSeatsFirstClass" />
+        </columns>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TableView>
+      <TableView fx:id="jTableView3" focusTraversable="false" layoutX="536.0" layoutY="134.0" prefHeight="62.0" prefWidth="750.0">
+        <columns>
+            <TableColumn fx:id="jReservedSeatsCoach" prefWidth="156.0" text="reservedSeatsCoach" />
+            <TableColumn fx:id="jAverageRating" prefWidth="116.0" text="averageRating" />
+            <TableColumn fx:id="jHasMeal" prefWidth="94.0" text="hasMeal" />
+            <TableColumn fx:id="jHasVEgiterianMeal" prefWidth="195.0" text="hasVegeterianMeal" />
+            <TableColumn fx:id="jHasEntertainment" prefWidth="148.0" text="hasEntertainment" />
+        </columns>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TableView>
+   </children>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+</AnchorPane>
