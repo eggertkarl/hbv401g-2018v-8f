@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +150,16 @@ public class Flight {
     public Double getAverageRating() {
         return averageRating;
     }
+    
+    @Override
+    public String toString(){
+        String displayString = "";
+        displayString += getDepartureLocation() + " - " + getArrivalLocation();
+        displayString += " (" + getDepartureTime() + ") ";
 
+        return displayString;
+    }
+    
     //--------------------------------------------------------------------------------
     //endregion
 }

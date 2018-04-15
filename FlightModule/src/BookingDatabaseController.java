@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 import java.util.ArrayList;
 
 public class BookingDatabaseController extends DatabaseController {
