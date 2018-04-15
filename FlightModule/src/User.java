@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 public class User {
 
     //region Attributes
