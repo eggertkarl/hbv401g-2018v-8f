@@ -32,10 +32,10 @@ public class BookingController extends ColumnNames{
             return false;
         }
 
-        if(databaseController.isSeatReserved()) { // TODO: Parameters missing
+        if(databaseController.isSeatReserved(flight, seat)) {
             return false;
         }
-        if(databaseController.doesUserAlreadyHaveReservation()) { // TODO: Parameters missing
+        if(databaseController.doesUserAlreadyHaveReservation(flight, name, passportNumber)) {
             return false;
         }
 
@@ -81,15 +81,17 @@ public class BookingController extends ColumnNames{
         if(this.reservations.isEmpty()) {
             return false;
         }
-
-        if(databaseController.isSeatReserved()) { // TODO: Parameters missing
-            return false;
+        //String[] passportNumbers = this.reservations.keySet().toArray(new String[0]);
+        Reservation[] reservationArray = this.reservations.values().toArray(new Reservation[0]);
+        for(Reservation r: reservationArray) {
+            if(databaseController.isSeatReserved(this.flight, r.getSeat())) { // TODO: Parameters missing
+                return false;
+            }
+            if(databaseController.doesUserAlreadyHaveReservation(flight, r.getUser().getName(), r.getUser().getPassportNumber())) { // TODO: Parameters missing
+                return false;
+            }
         }
-        if(databaseController.doesUserAlreadyHaveReservation()) { // TODO: Parameters missing
-            return false;
-        }
-
-        return databaseController.reserveSeats(); // TODO: Parameters missing
+        return databaseController.reserveSeats(this.reservations); // TODO: Parameters missing
     }
 
     public ArrayList<Reservation> searchForReservations(String name, String passportNumber) {
