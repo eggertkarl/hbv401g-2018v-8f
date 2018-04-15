@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1300.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FlightModule.vidmot.SearchInterfaceController">
+  <tabs>
+    <Tab text="Flight search">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <HBox prefHeight="560.0">
+                     <children>
+                        <VBox minWidth="314.0" prefWidth="314.0">
+                           <children>
+                              <VBox VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Accordion>
+                                      <panes>
+                                        <TitledPane animated="false" prefHeight="432.0" prefWidth="314.0" text="Flight parameters">
+                                             <content>
+                                                <VBox alignment="TOP_RIGHT" spacing="10.0">
+                                                   <children>
+                                                      <HBox alignment="TOP_RIGHT" spacing="10.0">
+                                                         <children>
+                                                            <Label text="Departure Location" />
+                                                            <ComboBox fx:id="departureLocationBox" prefWidth="150.0">
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </ComboBox>
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                         <VBox.margin>
+                                                            <Insets top="10.0" />
+                                                         </VBox.margin>
+                                                      </HBox>
+                                                      <HBox alignment="TOP_RIGHT" layoutX="10.0" layoutY="10.0" spacing="10.0">
+                                                         <children>
+                                                            <Label text="Destination">
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </Label>
+                                                            <ComboBox fx:id="arrivalLocationBox" prefWidth="150.0">
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </ComboBox>
+                                                         </children>
+                                                         <VBox.margin>
+                                                            <Insets />
+                                                         </VBox.margin>
+                                                      </HBox>
+                                                      <HBox alignment="TOP_RIGHT" spacing="10.0">
+                                                         <children>
+                                                            <Label text="Day of flight" />
+                                                            <DatePicker fx:id="jCalendarFrom" prefHeight="31.0" prefWidth="150.0">
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </DatePicker>
+                                                         </children>
+                                                         <VBox.margin>
+                                                            <Insets />
+                                                         </VBox.margin>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                                         <children>
+                                                            <RadioButton fx:id="jFlexibleRadio" mnemonicParsing="false" text="Flexible date" />
+                                                            <DatePicker fx:id="jCalendarTo" disable="true" pickOnBounds="false" prefWidth="150.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" text="Additional parameters">
+                                             <content>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="Airline" />
+                                                      <HBox alignment="CENTER" spacing="10.0">
+                                                         <children>
+                                                            <ComboBox fx:id="airlineBox" prefWidth="150.0">
+                                                               <HBox.margin>
+                                                                  <Insets />
+                                                               </HBox.margin>
+                                                            </ComboBox>
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <VBox alignment="CENTER">
+                                                         <children>
+                                                            <Label text="Minimum coach price " />
+                                                            <TextField fx:id="minPriceTextField" maxWidth="100.0" minWidth="100.0" onAction="#updateSliderPriceMin" prefWidth="100.0" />
+                                                            <HBox alignment="CENTER" spacing="10.0">
+                                                               <opaqueInsets>
+                                                                  <Insets />
+                                                               </opaqueInsets>
+                                                               <children>
+                                                                  <Label fx:id="lowestPriceLabel" />
+                                                                  <Slider fx:id="sliderMin" />
+                                                                  <Label fx:id="highestPriceLable" />
+                                                               </children>
+                                                            </HBox>
+                                                            <Label text="Maximum coach price" />
+                                                            <TextField fx:id="maxPriceTextField" maxWidth="100.0" minWidth="100.0" onAction="#updateSliderPriceMax" prefWidth="100.0" />
+                                                            <HBox alignment="CENTER" spacing="10.0">
+                                                               <children>
+                                                                  <Label fx:id="lowestPriceLabel1" />
+                                                                  <Slider fx:id="sliderMax" />
+                                                                  <Label fx:id="highestPriceLable1" />
+                                                               </children>
+                                                               <opaqueInsets>
+                                                                  <Insets />
+                                                               </opaqueInsets>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                      <VBox fillWidth="false" maxWidth="150.0" minWidth="100.0" prefHeight="63.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <RadioButton mnemonicParsing="false" onAction="#filterByMeal" text="Meal" />
+                                                            <RadioButton mnemonicParsing="false" onAction="#filterByVegiterianMeal" text="Vegiterian meal" />
+                                                            <RadioButton mnemonicParsing="false" onAction="#filterByEntertainment" text="Entertainment" />
+                                                         </children>
+                                                         <VBox.margin>
+                                                            <Insets top="5.0" />
+                                                         </VBox.margin>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </TitledPane>
+                                      </panes>
+                                    </Accordion>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5.0">
+                                 <children>
+                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#searchFlightHandler" prefWidth="150.0" text="Search" />
+                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" text="More information" />
+                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#bookFlightHandler" prefWidth="150.0" text="Book flight" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <ScrollPane fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="560.0" minWidth="986.0" prefHeight="560.0" prefWidth="986.0" HBox.hgrow="ALWAYS">
+                           <content>
+                              <TableView fx:id="jTableView" maxWidth="-Infinity" minHeight="531.0" minWidth="-Infinity" prefHeight="558.0" prefWidth="984.0">
+                                 <columns>
+                                    <TableColumn fx:id="jDepartureLocation" prefWidth="108.0" text="Departure" />
+                                    <TableColumn fx:id="jArrivalLocation" prefWidth="82.0" text="Arrival" />
+                                    <TableColumn fx:id="jDepartureTime" prefWidth="135.0" text="Departure time" />
+                                    <TableColumn fx:id="jArrivalTime" prefWidth="127.0" text="Arrival time" />
+                                    <TableColumn fx:id="jAirline" minWidth="0.0" prefWidth="0.0" text="Airline" />
+                                    <TableColumn fx:id="jFirstClassPrice" prefWidth="128.0" text="First class price" />
+                                    <TableColumn fx:id="jCoachPrice" prefWidth="102.0" text="Coach price" />
+                                    <TableColumn fx:id="jAverageRating" prefWidth="116.0" text="Average rating" />
+                                    <TableColumn fx:id="jHasMeal" prefWidth="60.0" text="Meal" />
+                                    <TableColumn fx:id="jHasVEgiterianMeal" prefWidth="184.0" text="Vegeterian meal" />
+                                    <TableColumn fx:id="jHasEntertainment" prefWidth="156.0" text="Entertainment" />
+                                    <TableColumn fx:id="jFlightNumber" minWidth="0.0" prefWidth="126.0" text="Flight number" />
+                                    <TableColumn fx:id="jAirplaneType" prefWidth="124.0" text="Airplane type" />
+                                    <TableColumn fx:id="jTotalSeatsFirstClass" prefWidth="152.0" text="totalSeatsFirstClass" />
+                                    <TableColumn fx:id="jTotalSeatsCoach" prefWidth="76.0" text="totalSeatsCoach" />
+                                    <TableColumn fx:id="jReservedSeatsFirstClass" prefWidth="174.0" text="reservedSeatsFirstClass" />
+                                    <TableColumn fx:id="jReservedSeatsCoach" prefWidth="156.0" text="reservedSeatsCoach" />
+                                 </columns>
+                              </TableView>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </HBox>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab fx:id="bookingTab" disable="true" text="Flight booking">
+         <content>
+            <fx:include fx:id="bookingInterface" source="BookingInterface.fxml" />
+         </content></Tab>
+
+  </tabs>
+</TabPane>
