@@ -109,6 +109,10 @@ public class Flight {
         return departureTime;
     }
 
+    //public String getDepartureTimeString() { return departureTime.toString().substring(0,10) + " " + departureTime.toString().substring(11, 16);}
+
+    public String getDepartureTimeString() { return Utilities.convertLocalDateTimeToString(departureTime);}
+
     public LocalDateTime getArrivalTime() {
         return arrivalTime;
     }

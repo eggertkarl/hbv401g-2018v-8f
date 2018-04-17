@@ -16,12 +16,21 @@ public class TempTest
 
         ArrayList<Flight> flights = sc.searchForFlights();
 
-        System .out.println("Flights found: ");
-        for(int i = 0; i < flights.size(); i++) {
-            System.out.println(flights.get(i).getFlightNumber()
-                    + ",\t Reserved seats (first class): " + flights.get(i).getReservedSeatsFirstClass()
-                    + "\tRating: " + flights.get(i).getAverageRating());
-        }
+        //System .out.println("Flights found: ");
+        //for(int i = 0; i < flights.size(); i++) {
+        //    System.out.println(flights.get(i).getFlightNumber()
+        //            + ",\t Reserved seats (first class): " + flights.get(i).getReservedSeatsFirstClass()
+        //            + "\tRating: " + flights.get(i).getAverageRating());
+        //}
+
+        BookingController bc = new BookingController();
+        Seat seat = new Seat(2, "A", true, false);
+        bc.selectFlight(flights.get(0));
+        bc.addSeat("Siggi", "34567", seat, 2);
+        bc.confirmReservation();
+        System.out.println("virkar");
+        ArrayList<Reservation> siggaFlug = bc.searchForReservations("Siggi", "34567");
+        System.out.println(siggaFlug.get(0).getFlightNumber());
 
 
         ArrayList<String> locations = sc.getListOfLocations();

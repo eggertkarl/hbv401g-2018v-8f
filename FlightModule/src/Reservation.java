@@ -79,6 +79,8 @@ public class Reservation {
         return departureTime;
     }
 
+    public String getDepartureTimeString() { return Utilities.convertLocalDateTimeToString(departureTime);}
+
     //--------------------------------------------------------------------------------
     //endregion
 }

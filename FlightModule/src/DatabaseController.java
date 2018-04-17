@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static java.lang.Boolean.valueOf;
+
 class DatabaseController extends ColumnNames{
 
     //region Private constants
@@ -309,8 +311,8 @@ class DatabaseController extends ColumnNames{
             set(map);
 
             // TODO: How to get users for reservations?
-            User user = null;
-            Seat seat = null;
+            User user = new User(getString(ReservationColumns.name), getString(ReservationColumns.passportNumber), false);
+            Seat seat = new Seat(getInt(ReservationColumns.row), getString(ReservationColumns.column), false, false);
 
             return new Reservation(
                     getString(ReservationColumns.flightNumber),
@@ -318,7 +320,7 @@ class DatabaseController extends ColumnNames{
                     user,
                     seat,
                     getInt(ReservationColumns.bags),
-                    getBoolean(ReservationColumns.hasVegeterianMeal)
+                    valueOf(ReservationColumns.hasVegeterianMeal)
             );
         }
     };
