@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.shape.*?>
 <?import java.lang.*?>
@@ -48,6 +49,41 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </TableView>
+      <Label layoutX="227.0" layoutY="165.0" text="Pick a seat" />
+      <ComboBox fx:id="rowComboBox" layoutX="136.0" layoutY="121.0" prefWidth="150.0" />
+      <Button fx:id="seatA" layoutX="52.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="A" />
+      <Button fx:id="seatB" layoutX="117.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="B" />
+      <Button fx:id="seatC" layoutX="181.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="C" />
+      <Button fx:id="seatF" layoutX="408.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="F" />
+      <Button fx:id="seatD" layoutX="278.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="D" />
+      <Button fx:id="seatE" layoutX="343.0" layoutY="202.0" maxWidth="65.0" minWidth="65.0" mnemonicParsing="false" onAction="#clickOnSeat" prefWidth="65.0" text="E" />
+      <Label layoutX="50.0" layoutY="126.0" text="Pick a row" />
+      <RadioButton fx:id="firstClassRadio" layoutX="46.0" layoutY="76.0" mnemonicParsing="false" onAction="#firstClassHandler" prefHeight="4.0" prefWidth="128.0" text="First class seats" />
+      <TextField fx:id="jNameField" disable="true" layoutX="180.0" layoutY="352.0" />
+      <Label layoutX="52.0" layoutY="357.0" text="Name" />
+      <Label layoutX="52.0" layoutY="395.0" text="Passport Number" />
+      <TextField fx:id="jPassportNumberField" disable="true" layoutX="180.0" layoutY="390.0" />
+      <TextField fx:id="jBags" alignment="CENTER" layoutX="215.0" layoutY="314.0" prefHeight="31.0" prefWidth="40.0" text="1" />
+      <Button layoutX="180.0" layoutY="314.0" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#subtractBags" prefWidth="35.0" text="-" />
+      <Button layoutX="255.0" layoutY="314.0" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#addBags" prefWidth="35.0" text="+" />
+      <Button layoutX="52.0" layoutY="455.0" mnemonicParsing="false" onAction="#bookSeatHandler" text="Book seat" />
+      <Label layoutX="52.0" layoutY="319.0" text="Number of bags" />
+      <Label fx:id="priceLabel" layoutX="410.0" layoutY="455.0" prefHeight="62.0" prefWidth="223.0" text="0.00kr" textFill="#b5b5b5" underline="true">
+         <font>
+            <Font size="42.0" />
+         </font>
+      </Label>
+      <Label layoutX="187.0" layoutY="455.0" text="Total price:" textFill="#b5b5b5" underline="true">
+         <font>
+            <Font size="42.0" />
+         </font>
+      </Label>
+      <ListView fx:id="jSeatListView" layoutX="638.0" layoutY="217.0" prefHeight="246.0" prefWidth="386.0" />
+      <Label layoutX="30.0" layoutY="24.0" text="Booking">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
    </children>
    <cursor>
       <Cursor fx:constant="DEFAULT" />

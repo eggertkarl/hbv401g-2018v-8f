@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -32,6 +33,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 
 
 /**
@@ -120,6 +122,10 @@ public class SearchInterfaceController implements Initializable {
     private double sliderValueMax;
     private double sliderValueMin;
     private Flight selectedFlight;
+    @FXML
+    private Accordion jAccordion;
+    @FXML
+    private TitledPane jFlightParameters;
 
     
     
@@ -132,6 +138,7 @@ public class SearchInterfaceController implements Initializable {
         //initialize all controllers and variables
         searchController = new SearchController();
         flights = FXCollections.observableArrayList(); 
+        jAccordion.setExpandedPane(jFlightParameters);
         
         //uppfæra comboBoxa með gildum
         initializeComboBoxes();
@@ -521,6 +528,10 @@ public class SearchInterfaceController implements Initializable {
         } else {
             searchController.filterRemoveHasEntertainment();
         }
+    }
+
+    @FXML
+    private void clearParameters(ActionEvent event) {
     }
 
 

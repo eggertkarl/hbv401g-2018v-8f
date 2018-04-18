@@ -22,9 +22,9 @@
                            <children>
                               <VBox VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Accordion>
+                                    <Accordion fx:id="jAccordion">
                                       <panes>
-                                        <TitledPane animated="false" prefHeight="432.0" prefWidth="314.0" text="Flight parameters">
+                                        <TitledPane fx:id="jFlightParameters" animated="false" prefHeight="432.0" prefWidth="314.0" text="Flight parameters">
                                              <content>
                                                 <VBox alignment="TOP_RIGHT" spacing="10.0">
                                                    <children>
@@ -150,8 +150,8 @@
                               <VBox alignment="CENTER" spacing="5.0">
                                  <children>
                                     <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#searchFlightHandler" prefWidth="150.0" text="Search" />
-                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" text="More information" />
                                     <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#bookFlightHandler" prefWidth="150.0" text="Book flight" />
+                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#clearParameters" prefWidth="150.0" text="Clear parameters" />
                                  </children>
                               </VBox>
                            </children>
