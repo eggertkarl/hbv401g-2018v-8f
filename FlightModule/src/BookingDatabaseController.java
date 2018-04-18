@@ -16,7 +16,7 @@ public class BookingDatabaseController extends DatabaseController {
                 + "AND SeatColumn = ?" ;
         ArrayList<Object> params = new ArrayList<>();
         params.add(flight.getFlightNumber());
-        params.add(flight.getDepartureTime());
+        params.add(flight.getDepartureTimeString());
         params.add(seat.getRow());
         params.add(seat.getColumn());
         ArrayList<Reservation> reservations = executeQuery(query, params, reservationInitializer);
@@ -37,7 +37,7 @@ public class BookingDatabaseController extends DatabaseController {
                 + "AND PassportNumber = ?" ;
         ArrayList<Object> params = new ArrayList<>();
         params.add(flight.getFlightNumber());
-        params.add(flight.getDepartureTime());
+        params.add(flight.getDepartureTimeString());
         params.add(name);
         params.add(passportNumber);
         ArrayList<Reservation> reservations = executeQuery(query, params, reservationInitializer);
@@ -56,9 +56,9 @@ public class BookingDatabaseController extends DatabaseController {
                 "  DepartureTime,\n" +
                 "  Name,\n" +
                 "  PassportNumber,\n" +
-                "  SeatRow INT,\n" +
+                "  SeatRow,\n" +
                 "  SeatColumn,\n" +
-                "  Bags,\n" +
+                "  Bags)\n" +
                 "  VALUES ";
         String[] passportNumbers = reservations.keySet().toArray(new String[0]);
         Reservation[] reservationArray = reservations.values().toArray(new Reservation[0]);
@@ -67,14 +67,14 @@ public class BookingDatabaseController extends DatabaseController {
         for(Reservation r: reservationArray) {
             query += "(?, ?, ?, ?, ?, ?, ?), ";
             params.add(r.getFlightNumber());
-            params.add(r.getDepartureTime());
+            params.add(r.getDepartureTimeString());
             params.add(r.getUser().getName());
             params.add(r.getUser().getPassportNumber());
             params.add(r.getSeat().getRow());
             params.add(r.getSeat().getColumn());
             params.add(r.getBags());
         }
-        query = query.substring(0, query.length()-3);
+        query = query.substring(0, query.length()-2);
         query += ";";
         boolean success = false;
         success = execute(query, params); // Skilar true/false eftir success.
@@ -88,9 +88,10 @@ public class BookingDatabaseController extends DatabaseController {
         ArrayList<Object> params = new ArrayList<>();
         params.add(name);
         params.add(passportNumber);
-
+        //System.out.println(query);
         ArrayList<Reservation> reservations = executeQuery(query, params, reservationInitializer);
         return reservations;
+        //return executeQuery(query, params, reservationInitializer);
     }
 
     boolean cancelReservation(Reservation reservation) {
@@ -99,7 +100,7 @@ public class BookingDatabaseController extends DatabaseController {
         String query = "DELETE FROM Reservations WHERE FlightNumber = ? AND DepartureTime = ? AND Name = ? AND PassportNumber = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(reservation.getFlightNumber());
-        params.add(reservation.getDepartureTime());
+        params.add(reservation.getDepartureTimeString());
         params.add(reservation.getUser().getName());
         params.add(reservation.getUser().getPassportNumber());
 
@@ -118,10 +119,10 @@ public class BookingDatabaseController extends DatabaseController {
                 "  PassportNumber,\n" +
                 "  Rating,\n" +
                 "  Comment)" +
-                "  VALUES (?, ?, ?, ?, ? ,?)";
+                "  VALUES (?, ?, ?, ?, ?, ?)";
         ArrayList<Object> params = new ArrayList<>();
         params.add(reservation.getFlightNumber());
-        params.add(reservation.getDepartureTime());
+        params.add(reservation.getDepartureTimeString());
         params.add(reservation.getUser().getName());
         params.add(reservation.getUser().getPassportNumber());
         params.add(score);
