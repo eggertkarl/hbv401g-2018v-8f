@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class BookingController extends ColumnNames{
+public class BookingController{
 
     private BookingDatabaseController databaseController = null;
     private HashMap<String, Reservation> reservations = null;
@@ -15,7 +15,10 @@ public class BookingController extends ColumnNames{
         databaseController = new BookingDatabaseController();
         reservations = new HashMap<>();
     }
-
+    
+    public boolean isSeatReserved(Flight flight, Seat seat){
+        return databaseController.isSeatReserved(flight, seat);
+    }
 
     public boolean addSeat(String name, String passportNumber, Seat seat, int bags) {
         return addSeat(name, passportNumber, seat, bags, false, false);

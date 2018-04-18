@@ -118,6 +118,7 @@ class SearchDatabaseController extends DatabaseController{
                         + "\n	("
                         + "\n		SELECT Airline, AVG(Rating) AS " + FlightColumns.averageRating
                         + "\n		FROM Reviews"
+                        + "\n           GROUP BY Airline"
                         + "\n	) D"
                         + "\n	ON D.Airline = T.Airline"
                         + "\n	) A "
