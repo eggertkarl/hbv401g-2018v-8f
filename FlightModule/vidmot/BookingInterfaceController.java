@@ -10,6 +10,7 @@ import FlightModule.src.Flight;
 import FlightModule.src.Seat;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
@@ -19,7 +20,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -27,6 +30,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+
 
 /**
  * FXML Controller class
@@ -396,7 +400,23 @@ public class BookingInterfaceController implements Initializable {
 
     @FXML
     private void confirmReservationHandler(ActionEvent event) {
-        bookingController.confirmReservation();
+        if (bookingController.confirmReservation()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Booking");
+            alert.setHeaderText(null);
+            alert.setContentText("Booking has been received");
+            ButtonType iLagi = new ButtonType("Close");
+            alert.getButtonTypes().setAll(iLagi);
+            Optional<ButtonType> result = alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Booking");
+            alert.setHeaderText(null);
+            alert.setContentText("Error in booking.");
+            ButtonType iLagi = new ButtonType("Close");
+            alert.getButtonTypes().setAll(iLagi);
+            Optional<ButtonType> result = alert.showAndWait();
+        }
     }
     
     public void clearParameters(){
