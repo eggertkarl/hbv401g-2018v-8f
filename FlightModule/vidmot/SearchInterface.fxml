@@ -151,7 +151,6 @@
                                  <children>
                                     <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#searchFlightHandler" prefWidth="150.0" text="Search" />
                                     <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#bookFlightHandler" prefWidth="150.0" text="Book flight" />
-                                    <Button maxWidth="150.0" minWidth="150.0" mnemonicParsing="false" onAction="#clearParameters" prefWidth="150.0" text="Clear parameters" />
                                  </children>
                               </VBox>
                            </children>

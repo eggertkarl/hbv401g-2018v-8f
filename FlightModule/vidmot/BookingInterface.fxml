@@ -68,12 +68,12 @@
       <Button layoutX="255.0" layoutY="314.0" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#addBags" prefWidth="35.0" text="+" />
       <Button layoutX="52.0" layoutY="455.0" mnemonicParsing="false" onAction="#bookSeatHandler" text="Book seat" />
       <Label layoutX="52.0" layoutY="319.0" text="Number of bags" />
-      <Label fx:id="priceLabel" layoutX="410.0" layoutY="455.0" prefHeight="62.0" prefWidth="223.0" text="0.00kr" textFill="#b5b5b5" underline="true">
+      <Label fx:id="priceLabel" layoutX="405.0" layoutY="478.0" prefHeight="62.0" prefWidth="346.0" text="0.00kr" textFill="#b5b5b5" underline="true">
          <font>
             <Font size="42.0" />
          </font>
       </Label>
-      <Label layoutX="187.0" layoutY="455.0" text="Total price:" textFill="#b5b5b5" underline="true">
+      <Label layoutX="182.0" layoutY="478.0" text="Total price:" textFill="#b5b5b5" underline="true">
          <font>
             <Font size="42.0" />
          </font>
@@ -84,6 +84,7 @@
             <Font name="System Bold" size="30.0" />
          </font>
       </Label>
+      <Button fx:id="jConfirm" disable="true" layoutX="853.0" layoutY="478.0" mnemonicParsing="false" onAction="#confirmReservationHandler" text="Confirm reserved seats" />
    </children>
    <cursor>
       <Cursor fx:constant="DEFAULT" />

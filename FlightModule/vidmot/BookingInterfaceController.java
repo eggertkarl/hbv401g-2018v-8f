@@ -114,6 +114,8 @@ public class BookingInterfaceController implements Initializable {
     private Label priceLabel;
     @FXML
     private ListView<String> jSeatListView;
+    @FXML
+    private Button jConfirm;
     
     
     /**
@@ -361,6 +363,7 @@ public class BookingInterfaceController implements Initializable {
         if(!name.isEmpty() && !passportNumber.isEmpty()){
             if(bookingController.addSeat(name, passportNumber, selectedSeat, bags)){
                 updateSeatListView(name);
+                jConfirm.setDisable(false);
             }
         }
     }
@@ -390,5 +393,21 @@ public class BookingInterfaceController implements Initializable {
         }
         priceLabel.setText(priceTotal + ".00kr");
     }
+
+    @FXML
+    private void confirmReservationHandler(ActionEvent event) {
+        bookingController.confirmReservation();
+    }
     
+    public void clearParameters(){
+    jNameField.setText("");
+    jNameField.setDisable(true);
+    jPassportNumberField.setText("");
+    jPassportNumberField.setDisable(true);
+    jBags.setText("1");
+    bookedSeatsList = FXCollections.observableArrayList();
+    jSeatListView.setItems(bookedSeatsList);
+    priceLabel.setText("0.00kr");
+        
+    }
 }

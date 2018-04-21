@@ -481,7 +481,7 @@ public class SearchInterfaceController implements Initializable {
         return newList;
     }
     
-        private ObservableList<String> arrayListToObservableListString(ArrayList<String> list){
+    private ObservableList<String> arrayListToObservableListString(ArrayList<String> list){
         ObservableList<String> newList = FXCollections.observableArrayList();;
         for(String a: list){
             newList.add(a);
@@ -499,7 +499,9 @@ public class SearchInterfaceController implements Initializable {
     private void bookFlightHandler(ActionEvent event) {
         bookingTab.setDisable(false);
         System.out.println(selectedFlight);
+        bookingInterfaceController.clearParameters();
         bookingInterfaceController.setSelectedFlight(selectedFlight);
+        
     }
 
     @FXML
@@ -532,6 +534,7 @@ public class SearchInterfaceController implements Initializable {
 
     @FXML
     private void clearParameters(ActionEvent event) {
+        
     }
 
 
