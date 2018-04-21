@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 import java.util.HashMap;
 
 public class Seat{

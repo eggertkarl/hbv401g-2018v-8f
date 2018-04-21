@@ -1,3 +1,5 @@
+package FlightModule.src;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -13,7 +15,10 @@ public class BookingController {
         databaseController = new BookingDatabaseController();
         reservations = new HashMap<>();
     }
-
+    
+    public boolean isSeatReserved(Flight flight, Seat seat){
+        return databaseController.isSeatReserved(flight, seat);
+    }
 
     public boolean addSeat(String name, String passportNumber, Seat seat, Integer bags) {
         return addSeat(name, passportNumber, seat, bags, false, false);
