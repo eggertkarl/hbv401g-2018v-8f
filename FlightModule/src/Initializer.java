@@ -54,4 +54,3 @@ abstract class Initializer<T>{
         return Utilities.convertStringToLocalDateTime(text);
     }
 }
-

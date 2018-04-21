@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class BookingController extends ColumnNames{
+public class BookingController {
 
     private BookingDatabaseController databaseController = null;
     private HashMap<String, Reservation> reservations = null;
@@ -15,15 +15,14 @@ public class BookingController extends ColumnNames{
     }
 
 
-    public boolean addSeat(String name, String passportNumber, Seat seat, int bags) {
+    public boolean addSeat(String name, String passportNumber, Seat seat, Integer bags) {
         return addSeat(name, passportNumber, seat, bags, false, false);
     }
 
 
-    public boolean addSeat(String name, String passportNumber, Seat seat, int bags, boolean isMinor, boolean hasVegeterianMeal) {
+    public boolean addSeat(String name, String passportNumber, Seat seat, Integer bags, Boolean isMinor, Boolean hasVegeterianMeal) {
         // If the user or seat is already registered, or the seat is unavailable, then return false.
 
-        // TODO: Better error handling? Something to tell the user what went wrong.
         if(reservations.containsKey(passportNumber)) {
             return false;
         }
@@ -38,6 +37,7 @@ public class BookingController extends ColumnNames{
         if(databaseController.doesUserAlreadyHaveReservation(flight, name, passportNumber)) {
             return false;
         }
+
 
         for(Reservation reservation : reservations.values()) {
             Seat tmpSeat = reservation.getSeat();
@@ -84,14 +84,21 @@ public class BookingController extends ColumnNames{
         //String[] passportNumbers = this.reservations.keySet().toArray(new String[0]);
         Reservation[] reservationArray = this.reservations.values().toArray(new Reservation[0]);
         for(Reservation r: reservationArray) {
-            if(databaseController.isSeatReserved(this.flight, r.getSeat())) { // TODO: Parameters missing
+            if(databaseController.isSeatReserved(this.flight, r.getSeat())) {
                 return false;
             }
-            if(databaseController.doesUserAlreadyHaveReservation(flight, r.getUser().getName(), r.getUser().getPassportNumber())) { // TODO: Parameters missing
+            if(databaseController.doesUserAlreadyHaveReservation(flight, r.getUser().getName(), r.getUser().getPassportNumber())) {
                 return false;
             }
         }
-        return databaseController.reserveSeats(this.reservations); // TODO: Parameters missing
+
+        for(Reservation r: reservationArray) {
+            if(!databaseController.doesUserAlreadyExist(r.getUser())) {
+                databaseController.addUser(r.getUser());
+            }
+        }
+
+        return databaseController.reserveSeats(this.reservations);
     }
 
     public ArrayList<Reservation> searchForReservations(String name, String passportNumber) {

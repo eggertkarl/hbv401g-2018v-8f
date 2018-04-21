@@ -4,7 +4,7 @@ import java.util.HashMap;
 public class BookingDatabaseController extends DatabaseController {
 
     boolean isSeatReserved(Flight flight, Seat seat) {
-        // TODO: Velja parametra
+
         // Check if the seat in a particular flight has been reserved.
         //if(flight.getTotalSeatsCoach()+flight.getTotalSeatsFirstClass()<=flight.getReservedSeatsCoach()+flight.getReservedSeatsFirstClass()) {
         //    return false;
@@ -28,11 +28,14 @@ public class BookingDatabaseController extends DatabaseController {
     }
 
     boolean doesUserAlreadyHaveReservation(Flight flight, String name, String passportNumber) {
-        // TODO: Velja parametra
+
         // Check whether the user already has a reserved seat in a particular flight.
-        String query = "SELECT * FROM Reservations WHERE FlightNumber = ?"
-                + "AND DepartureTime = ? AND Name = ?"
-                + "AND PassportNumber = ?" ;
+        String query = "SELECT * " +
+                "FROM Reservations " +
+                    "WHERE FlightNumber = ?" +
+                        "AND DepartureTime = ? " +
+                        "AND Name = ?" +
+                        "AND PassportNumber = ?" ;
         ArrayList<Object> params = new ArrayList<>();
         params.add(flight.getFlightNumber());
         params.add(flight.getDepartureTimeString());
@@ -48,29 +51,63 @@ public class BookingDatabaseController extends DatabaseController {
         return true;
     }
 
+    boolean doesUserAlreadyExist(User user) {
+        String query = "SELECT * FROM Users WHERE Name = ? AND PassportNumber = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(user.getName());
+        params.add(user.getPassportNumber());
+        ArrayList<User> users = executeQuery(query, params, userInitializer);
+        if(users == null) {
+            return false;
+        }
+        if(users.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    boolean addUser(User user) {
+        String query = "INSERT INTO Users (Name, PassportNumber, isMinor)"
+                + "VALUES (?, ?, ?);";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(user.getName());
+        params.add(user.getPassportNumber());
+        params.add(user.isMinor());
+        return execute(query, params);
+    }
+
     boolean reserveSeats(HashMap<String, Reservation> reservations) {
 
         String query = "INSERT INTO Reservations (FlightNumber,\n" +
                 "  DepartureTime,\n" +
                 "  Name,\n" +
                 "  PassportNumber,\n" +
+                "  AirplaneType, \n" +
                 "  SeatRow,\n" +
                 "  SeatColumn,\n" +
-                "  Bags)\n" +
+                "  Bags,\n" +
+                "  HasVegeterianMeal)\n" +
                 "  VALUES ";
-        String[] passportNumbers = reservations.keySet().toArray(new String[0]);
+
         Reservation[] reservationArray = reservations.values().toArray(new Reservation[0]);
+
+        SearchController sc = new SearchController();
+        sc.filterSetDepartureTimeEqualTo(reservationArray[0].getDepartureTime());
+        sc.filterSetFilterFlightNumberEqualTo(reservationArray[0].getFlightNumber());
+        Flight flight = sc.searchForFlights().get(0);
 
         ArrayList<Object> params = new ArrayList<>();  // Setja alla parametra í réttri röð
         for(Reservation r: reservationArray) {
-            query += "(?, ?, ?, ?, ?, ?, ?), ";
+            query += "(?, ?, ?, ?, ?, ?, ?, ?, ?), ";
             params.add(r.getFlightNumber());
             params.add(r.getDepartureTimeString());
             params.add(r.getUser().getName());
             params.add(r.getUser().getPassportNumber());
+            params.add(flight.getAirplaneType()); // airplanetype
             params.add(r.getSeat().getRow());
             params.add(r.getSeat().getColumn());
             params.add(r.getBags());
+            params.add(r.hasVegeterianMeal()); // has veggie
         }
         query = query.substring(0, query.length()-2);
         query += ";";
@@ -81,21 +118,52 @@ public class BookingDatabaseController extends DatabaseController {
     }
 
     ArrayList<Reservation> searchForReservations(String name, String passportNumber) {
-        // TODO: Set query and params. Should select all reservations matching the name and passportNumber.
-        String query = "SELECT * FROM Reservations WHERE Name = ? AND PassportNumber = ?;" ;
+
+        String query =
+                  "SELECT DISTINCT " +
+                "\n    Reservations.Name, " +
+                "\n    Reservations.PassportNumber, " +
+                "\n    Reservations.FlightNumber, " +
+                "\n    Reservations.DepartureTime, " +
+                "\n    Reservations.Bags, " +
+                "\n    Reservations.HasVegeterianMeal, " +
+                "\n    Users.IsMinor, " +
+                "\n    FlightSeats.Row, " +
+                "\n    FlightSeats.Column, " +
+                "\n    FlightSeats.IsFirstClass, " +
+                "\n        CASE WHEN Reservations.PassportNumber IS NULL " +
+                "\n            THEN 1 " +
+                "\n            ELSE 0 " +
+                "\n        END " +
+                "\n            AS IsAvailable " +
+                "\nFROM " +
+                "\n    ( " +
+                "\n        Reservations " +
+                "\n        LEFT JOIN Users " +
+                "\n            ON Reservations.Name = Users.Name " +
+                "\n                AND Reservations.PassportNumber = Users.PassportNumber " +
+                "\n        LEFT JOIN FlightSeats " +
+                "\n            ON FlightSeats.Row = Reservations.SeatRow " +
+                "\n                AND FlightSeats.Column = Reservations.SeatColumn " +
+                "\n                AND FlightSeats.AirplaneType = Reservations.AirplaneType " +
+                "\n    ) " +
+                "\nWHERE " +
+                "\n    Reservations.Name = ? " +
+                "\n        AND Reservations.PassportNumber = ?;";
+
         ArrayList<Object> params = new ArrayList<>();
         params.add(name);
         params.add(passportNumber);
-        //System.out.println(query);
         ArrayList<Reservation> reservations = executeQuery(query, params, reservationInitializer);
         return reservations;
-        //return executeQuery(query, params, reservationInitializer);
     }
 
     boolean cancelReservation(Reservation reservation) {
-        // TODO: Query should delete the reservation. Include all keys in the sql statement.
-        // (Keys can be seen in the Documents/DatabaseSchema.sql)
-        String query = "DELETE FROM Reservations WHERE FlightNumber = ? AND DepartureTime = ? AND Name = ? AND PassportNumber = ?";
+        String query = "DELETE FROM Reservations " +
+                "WHERE FlightNumber = ? " +
+                    "AND DepartureTime = ? " +
+                    "AND Name = ? " +
+                    "AND PassportNumber = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(reservation.getFlightNumber());
         params.add(reservation.getDepartureTimeString());
@@ -106,10 +174,7 @@ public class BookingDatabaseController extends DatabaseController {
     }
 
     boolean addReview(Reservation reservation, int score, String comment) {
-        // TODO: Check if review for the flight by the same user already exists.
 
-        // TODO: The query should add the review to the correct table.
-        // (Keys can be seen in the Documents/DatabaseSchema.sql)
         String query = "INSERT INTO Reviews (\n" +
                 "  FlightNumber,\n" +
                 "  DepartureTime,\n" +
