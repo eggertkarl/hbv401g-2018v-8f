@@ -311,9 +311,17 @@ class DatabaseController extends ColumnNames{
         Reservation create(HashMap<String, Object> map) {
             set(map);
 
-            // TODO: How to get users for reservations?
-            User user = new User(getString(ReservationColumns.name), getString(ReservationColumns.passportNumber), false);
-            Seat seat = new Seat(getInt(ReservationColumns.row), getString(ReservationColumns.column), false, false);
+            User user = new User(
+                    getString(ReservationColumns.name),
+                    getString(ReservationColumns.passportNumber),
+                    getBoolean(UserColumns.isMinor)
+            );
+            Seat seat = new Seat(
+                    getInt(ReservationColumns.row),
+                    getString(ReservationColumns.column),
+                    getBoolean(SeatColumns.isAvailable),
+                    getBoolean(SeatColumns.isFirstClass)
+            );
 
             return new Reservation(
                     getString(ReservationColumns.flightNumber),
@@ -321,7 +329,27 @@ class DatabaseController extends ColumnNames{
                     user,
                     seat,
                     getInt(ReservationColumns.bags),
-                    valueOf(ReservationColumns.hasVegeterianMeal)
+                    getBoolean(ReservationColumns.hasVegeterianMeal)
+            );
+
+        }
+    };
+
+    protected static final Initializer<Reservation> reservationInitializerBoolean = new Initializer<Reservation>() {
+        @Override
+        Reservation create(HashMap<String, Object> map) {
+            set(map);
+
+            User user = null;
+            Seat seat = null;
+
+            return new Reservation(
+                    getString(ReservationColumns.flightNumber),
+                    getDateTime(ReservationColumns.departureTime),
+                    user,
+                    seat,
+                    getInt(ReservationColumns.bags),
+                    getBoolean(ReservationColumns.hasVegeterianMeal)
             );
         }
     };

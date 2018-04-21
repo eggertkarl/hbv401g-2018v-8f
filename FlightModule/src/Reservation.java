@@ -10,13 +10,13 @@ public class Reservation {
     private LocalDateTime departureTime;
     private User user;
     private Seat seat;
-    private int bags;
-    private boolean hasVegeterianMeal;
+    private Integer bags;
+    private Boolean hasVegeterianMeal;
     //--------------------------------------------------------------------------------
     //endregion
 
 
-    public Reservation(String flightNumber, LocalDateTime departureTime, User user, Seat seat, int bags, boolean hasVegeterianMeal) {
+    public Reservation(String flightNumber, LocalDateTime departureTime, User user, Seat seat, Integer bags, Boolean hasVegeterianMeal) {
         this.flightNumber = flightNumber;
         this.departureTime = departureTime;
         this.user = user;
@@ -35,16 +35,15 @@ public class Reservation {
     public void setUser(User user) {
         this.user = user;
     }
-
     public void setSeat(Seat seat) {
         this.seat = seat;
     }
 
-    public void setBags(int bags) {
+    public void setBags(Integer bags) {
         this.bags = bags;
     }
 
-    public void setHasVegeterianMeal(boolean hasVegeterianMeal) {
+    public void setHasVegeterianMeal(Boolean hasVegeterianMeal) {
         this.hasVegeterianMeal = hasVegeterianMeal;
     }
 
@@ -69,11 +68,11 @@ public class Reservation {
         return seat;
     }
 
-    public int getBags() {
+    public Integer getBags() {
         return bags;
     }
 
-    public boolean hasVegeterianMeal() {
+    public Boolean hasVegeterianMeal() {
         return hasVegeterianMeal;
     }
 
